@@ -13,4 +13,14 @@ export default [
       "webpack.prod.js",
     ],
   },
+  {
+    overrides: [
+      {
+        files: ["tests/**/*"],
+        env: {
+          jest: true,
+        },
+      },
+    ],
+  },
 ];
