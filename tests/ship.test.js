@@ -1,14 +1,14 @@
 import Ship from "../src/ship.js";
 
 describe("ship", () => {
+  const myShip = new Ship(5);
   test("should not be undefined", () => {
-    expect(new Ship()).toBeDefined();
+    expect(myShip).toBeDefined();
   });
   test("should be instance of ship", () => {
-    expect(new Ship()).toBeInstanceOf(Ship);
+    expect(myShip).toBeInstanceOf(Ship);
   });
   describe("ships properties", () => {
-    const myShip = new Ship(5);
     test("should have length attribute", () => {
       expect(myShip).toHaveProperty("length");
       expect(myShip.length).toBe(5);
@@ -22,5 +22,12 @@ describe("ship", () => {
       expect(myShip.isSunk()).toBe(true);
     });
     test.todo("should be sealed");
+  });
+  test("should throw error if length is not provided", () => {
+    expect(() => new Ship()).toThrow();
+  });
+  test("should throw error if length is not a int", () => {
+    expect(() => new Ship("a")).toThrow();
+    expect(() => new Ship(4.5)).toThrow();
   });
 });
