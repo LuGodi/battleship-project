@@ -42,13 +42,15 @@ describe("gameboard", () => {
     test.todo("should spread ship based on its length through the cells");
   });
 
-  test("Receive attack method should determine if hit a ship", () => {
-    expect(gameboard.receiveAttack("A", 9)).toBe(true);
-  });
-  test("should return false if doesn't hit a ship and coordinates must be recorded", () => {
-    expect(gameboard.receiveAttack("A", 8)).toBe(false);
-    expect(gameboard.columns["A"][7]).toBe("miss");
-    expect(gameboard.missedShots).toContainEqual(["A", 8]);
-    expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
+  describe("hitting ships", () => {
+    test("Receive attack method should determine if hit a ship", () => {
+      expect(gameboard.receiveAttack("A", 9)).toBe(true);
+    });
+    test("should return false if doesn't hit a ship and coordinates must be recorded", () => {
+      expect(gameboard.receiveAttack("A", 8)).toBe(false);
+      expect(gameboard.columns["A"][7]).toBe("miss");
+      expect(gameboard.missedShots).toContainEqual(["A", 8]);
+      expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
+    });
   });
 });
