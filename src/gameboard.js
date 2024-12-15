@@ -1,6 +1,7 @@
 import Ship from "./ship";
 
 export default class Gameboard {
+  //missed shots coordinate are not zero indexed
   missedShots = [];
   columns = {
     A: [],
@@ -29,7 +30,7 @@ export default class Gameboard {
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, ship) {
-    this.columns[column][row - 1] = ship;
+    this.setCoordinate(column, row, ship);
   }
   receiveAttack(column, row) {
     const ship = this.getCoordinate(column, row);
@@ -37,7 +38,7 @@ export default class Gameboard {
       ship.hit();
       return true;
     }
-    this.columns[column][row - 1] = "miss";
+    this.setCoordinate(column, row, "miss");
     this.missedShots.push([column, row]);
     return false;
   }

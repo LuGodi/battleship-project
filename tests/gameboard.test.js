@@ -18,7 +18,7 @@ describe("gameboard", () => {
     }
     expect(counter).toBe(100);
   });
-  describe("testing setters and getter for the board", () => {
+  describe("testing set and get methods for the board", () => {
     test("getter should return correct row which is row -1 becuase arrays are zero indexed", () => {
       console.log(gameboard.getCoordinate("A", 1));
       expect(gameboard.getCoordinate("A", 1)).toBe(gameboard.columns["A"][0]);
@@ -49,5 +49,6 @@ describe("gameboard", () => {
     expect(gameboard.receiveAttack("A", 8)).toBe(false);
     expect(gameboard.columns["A"][7]).toBe("miss");
     expect(gameboard.missedShots).toContainEqual(["A", 8]);
+    expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
   });
 });
