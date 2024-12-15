@@ -1,14 +1,13 @@
 export default class Ship {
-  timesHit = 0;
+  #timesHit = 0;
+  #sunk = false;
   constructor(length) {
     this.length = length;
-    this.sunk = false;
-    Object.seal(this);
   }
   hit() {
-    this.timesHit++;
+    this.#timesHit++;
   }
   isSunk() {
-    return this.timesHit >= this.length;
+    return this.#timesHit >= this.length;
   }
 }
