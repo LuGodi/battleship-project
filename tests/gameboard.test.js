@@ -18,6 +18,21 @@ describe("gameboard", () => {
     }
     expect(counter).toBe(100);
   });
+  describe("testing setters and getter for the board", () => {
+    test("getter should return correct row which is row -1 becuase arrays are zero indexed", () => {
+      console.log(gameboard.getCoordinate("A", 1));
+      expect(gameboard.getCoordinate("A", 1)).toBe(gameboard.columns["A"][0]);
+      expect(gameboard.getCoordinate("A", 1)).toBeNull();
+    });
+    test("set coordinate should  allow to modify the values of that reference", () => {
+      gameboard.setCoordinate("A", 2, "test");
+
+      expect(gameboard.getCoordinate("A", 2)).toBe("test");
+      gameboard.setCoordinate("A", 2, null);
+      expect(gameboard.getCoordinate("A", 2)).toBeNull();
+    });
+  });
+
   describe("placing ships", () => {
     test("should place ship at specific coordinate", () => {
       const myShip = new Ship(1);
