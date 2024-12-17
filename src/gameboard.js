@@ -23,6 +23,7 @@ export default class Gameboard {
     }
   }
   clearGameboard() {
+    //this is not pure
     for (const key of Object.keys(this.coordinates)) {
       this.coordinates[key].fill(null);
     }

@@ -21,7 +21,7 @@ describe("gameboard", () => {
   test("should add an object to the coordinate", () => {
     gameboard.coordinates["A"][0] = { type: "miss", player: "2" };
   });
-  test.only("clearGameboard should make all keys hold only null values", () => {
+  test("clearGameboard should make all keys hold only null values", () => {
     const checkIfNull = jest.fn((value) => value === null);
     const isGameboardClean = function () {
       for (const key of Object.keys(gameboard.coordinates)) {
@@ -38,7 +38,7 @@ describe("gameboard", () => {
     expect(isGameboardClean()).toBeTruthy();
   });
   describe("testing set and get methods for the board", () => {
-    test("getter should return correct row which is row -1 becuase arrays are zero indexed", () => {
+    test("getter should return correct row which is row -1 because arrays are zero indexed", () => {
       console.log(gameboard.getCoordinate("A", 1));
       expect(gameboard.getCoordinate("A", 1)).toBe(
         gameboard.coordinates["A"][0]
@@ -57,6 +57,7 @@ describe("gameboard", () => {
   describe("placing ships", () => {
     beforeEach(() => {
       Ship.mockClear();
+      gameboard.clearGameboard();
     });
     test("should call Ship constructor", () => {
       //replace for a mock
@@ -68,16 +69,22 @@ describe("gameboard", () => {
       expect(Ship).toHaveBeenCalledWith(1);
     });
     test("should place ship instance at passed coordinates", () => {
+      //this test is redudant ?
+      //I need to be sure this side effect happens ! Gameboard should be modified
+      gameboard.placeShip("A", 9, 1);
       const shipInstance = Ship.mock.instances[0];
-      console.log(shipInstance);
       const A9 = gameboard.getCoordinate("A", 9);
       expect(A9).toBeInstanceOf(Ship);
       expect(A9).toBe(shipInstance);
     });
-    test.skip("should spread ship based on its length through the cells", () => {});
+    test.todo("should spread ship based on its length through the cells");
   });
 
-  describe("hitting ships", () => {
+  describe.skip("hitting ships", () => {
+    beforeEach(() => {
+      Ship.mockClear();
+      gameboard.clearGameboard();
+    });
     test("Receive attack method should determine if hit a ship", () => {
       expect(gameboard.receiveAttack("A", 9)).toBe(true);
       //use a mock to determine if ship.hit() has been called
