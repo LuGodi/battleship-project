@@ -29,7 +29,8 @@ export default class Gameboard {
     this.columns[column][row - 1] = value;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
-  placeShip(column, row, ship) {
+  placeShip(column, row, length) {
+    const ship = new Ship(length);
     this.setCoordinate(column, row, ship);
   }
   receiveAttack(column, row) {

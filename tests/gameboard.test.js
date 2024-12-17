@@ -35,6 +35,7 @@ describe("gameboard", () => {
 
   describe("placing ships", () => {
     test("should place ship at specific coordinate", () => {
+      //replace for a mock
       const myShip = new Ship(1);
       gameboard.placeShip("A", 9, myShip);
       expect(gameboard.columns["A"][8]).toBe(myShip);
@@ -45,6 +46,7 @@ describe("gameboard", () => {
   describe("hitting ships", () => {
     test("Receive attack method should determine if hit a ship", () => {
       expect(gameboard.receiveAttack("A", 9)).toBe(true);
+      //use a mock to determine if ship.hit() has been called
     });
     test("should return false if doesn't hit a ship and coordinates must be recorded", () => {
       expect(gameboard.receiveAttack("A", 8)).toBe(false);
