@@ -3,7 +3,7 @@ import Ship from "./ship";
 export default class Gameboard {
   //missed shots coordinate are not zero indexed
   missedShots = [];
-  columns = {
+  coordinates = {
     A: [],
     B: [],
     C: [],
@@ -16,17 +16,22 @@ export default class Gameboard {
     J: [],
   };
   constructor() {
-    for (const [column, row] of Object.entries(this.columns)) {
+    for (const [column, row] of Object.entries(this.coordinates)) {
       for (let i = 0; i < 10; i++) {
         row.push(null);
       }
     }
   }
+  clearGameboard() {
+    for (const key of Object.keys(this.coordinates)) {
+      this.coordinates[key] = [];
+    }
+  }
   getCoordinate(column, row) {
-    return this.columns[column][row - 1];
+    return this.coordinates[column][row - 1];
   }
   setCoordinate(column, row, value) {
-    this.columns[column][row - 1] = value;
+    this.coordinates[column][row - 1] = value;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, length) {
