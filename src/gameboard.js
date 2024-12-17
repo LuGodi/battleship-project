@@ -24,7 +24,7 @@ export default class Gameboard {
   }
   clearGameboard() {
     for (const key of Object.keys(this.coordinates)) {
-      this.coordinates[key] = [];
+      this.coordinates[key].fill(null);
     }
   }
   getCoordinate(column, row) {
