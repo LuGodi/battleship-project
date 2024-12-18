@@ -37,6 +37,12 @@ describe("gameboard", () => {
     gameboard.clearGameboard();
     expect(isGameboardClean()).toBeTruthy();
   });
+  test("clearGameboard should clear missedShots", () => {
+    gameboard.missedShots.push(["A", 9]);
+    expect(gameboard.missedShots.length).toBe(1);
+    gameboard.clearGameboard();
+    expect(gameboard.missedShots.length).toBe(0);
+  });
   describe("testing set and get methods for the board", () => {
     test("getter should return correct row which is row -1 because arrays are zero indexed", () => {
       console.log(gameboard.getCoordinate("A", 1));
@@ -86,18 +92,24 @@ describe("gameboard", () => {
   });
 
   ////
-  describe.skip("hitting ships", () => {
+  describe("hitting ships", () => {
     beforeEach(() => {
       Ship.mockClear();
       gameboard.clearGameboard();
     });
     test("Receive attack method should determine if hit a ship", () => {
-      expect(gameboard.receiveAttack("A", 9)).toBe(true);
       //use a mock to determine if ship.hit() has been called
+      gameboard.placeShip("J", 1, 1);
+      const shipInstance = Ship.mock.instances[0];
+      expect(gameboard.receiveAttack("J", 1)).toBe(true);
+      expect(shipInstance.hit).toHaveBeenCalledTimes(1);
     });
     test("should return false if doesn't hit a ship and coordinates must be recorded", () => {
       expect(gameboard.receiveAttack("A", 8)).toBe(false);
-      expect(gameboard.coordinates["A"][7]).toBe("miss");
+    });
+    test("ship and coordinates must be recorded if missed", () => {
+      gameboard.receiveAttack("A", 8);
+      expect(gameboard.getCoordinate("A", 8)).toBe("miss");
       expect(gameboard.missedShots).toContainEqual(["A", 8]);
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
     });

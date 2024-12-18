@@ -27,6 +27,10 @@ export default class Gameboard {
     for (const key of Object.keys(this.coordinates)) {
       this.coordinates[key].fill(null);
     }
+    this.#clearMissedShots();
+  }
+  #clearMissedShots() {
+    this.missedShots = [];
   }
   getCoordinate(column, row) {
     return this.coordinates[column][row - 1];
@@ -47,8 +51,13 @@ export default class Gameboard {
       ship.hit();
       return true;
     }
-    this.setCoordinate(column, row, "miss");
-    this.missedShots.push([column, row]);
+    this.missedShots = this.#recordMiss(column, row);
     return false;
+  }
+  #recordMiss(column, row) {
+    this.setCoordinate(column, row, "miss");
+    const copyMissedShots = [...this.missedShots];
+    copyMissedShots.push([column, row]);
+    return copyMissedShots;
   }
 }
