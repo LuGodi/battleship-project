@@ -14,10 +14,14 @@ export default class Gameboard {
     this.missedShots = [];
   }
   getCoordinate(column, row) {
+    if (this.#isCoordinateValid(column, row) === false)
+      throw new Error("Invalid coordinate");
     const coordinate = column + row.toString();
     return this.coordinates[coordinate];
   }
   setCoordinate(column, row, value) {
+    if (this.#isCoordinateValid(column, row) === false)
+      throw new Error("Invalid coordinate");
     const newCoordinates = structuredClone(this.coordinates);
     const coordinate = column + row.toString();
     newCoordinates[coordinate] = value;
@@ -42,5 +46,25 @@ export default class Gameboard {
     const copyMissedShots = [...this.missedShots];
     copyMissedShots.push([column, row]);
     return copyMissedShots;
+  }
+  #isCoordinateValid(column, row) {
+    //use regex here
+    if (
+      this.#isRowValid(row) === true &&
+      this.#isColumnValid(column) === true
+    ) {
+      return true;
+    }
+    return false;
+  }
+  #isRowValid(row) {
+    if (row > 10 || row < 1) {
+      return false;
+    }
+    return true;
+  }
+  #isColumnValid(column) {
+    const regex = /[A-J]/;
+    return regex.test(column);
   }
 }

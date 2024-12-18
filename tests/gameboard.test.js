@@ -6,23 +6,9 @@ describe("gameboard", () => {
   test("gameboard should be defined", () => {
     expect(gameboard).toBeDefined();
   });
-  test.skip("should not allow beyond the tenth row nor before the 1 row", () => {
-    expect(gameboard.getCoordinate["A"][11]).toThrow();
-  });
-  test.skip("should not allow beyond J nor before A", () => {
-    let counter = 0;
-    for (const key of Object.keys(gameboard.coordinates)) {
-      for (const element of gameboard.coordinates[key]) {
-        counter++;
-      }
-    }
-    expect(counter).toBe(100);
-  });
-  test.skip("should add an object to the coordinate", () => {
-    //im already testing this on the getters and setters
-    gameboard.getCoordinate["A"][1] = { type: "miss", player: "2" };
-  });
+
   test("clearGameboard should empty the gameboard", () => {
+    //is it unit testing if im calling other functions in the tests?
     const newGameboard = new Gameboard();
     gameboard.placeShip("J", 9, 1);
     expect(gameboard.coordinates).not.toStrictEqual(newGameboard.coordinates);
@@ -39,6 +25,30 @@ describe("gameboard", () => {
     beforeEach(() => {
       Ship.mockClear();
       gameboard.clearGameboard();
+    });
+    test("should not allow beyond the tenth row nor before the 1 row", () => {
+      expect(() => gameboard.setCoordinate("A", 11, 1)).toThrow(
+        "Invalid coordinate"
+      );
+      expect(() => gameboard.getCoordinate("A", 11)).toThrow(
+        "Invalid coordinate"
+      );
+      expect(() => gameboard.getCoordinate("A", 1)).not.toThrow();
+    });
+    test("should not allow beyond J nor before A", () => {
+      //TODO refactor this to hold all the expectations on a loop
+      expect(() => gameboard.getCoordinate("Z", 1)).toThrow(
+        "Invalid coordinate"
+      );
+      expect(() => gameboard.getCoordinate("J", 2)).not.toThrow(
+        "Invalid coordinate"
+      );
+      expect(() => gameboard.setCoordinate("J", 2, 1)).not.toThrow(
+        "Invalid coordinate"
+      );
+      expect(() => gameboard.setCoordinate("K", 2)).toThrow(
+        "Invalid coordinate"
+      );
     });
     test("getter should return correct row", () => {
       const myObj = [1];
