@@ -78,8 +78,6 @@ describe("gameboard", () => {
       gameboard.clearGameboard();
     });
     test("should call Ship constructor", () => {
-      //replace for a mock
-
       //check if placeship called the constructor
 
       gameboard.placeShip("A", 9, 1);
@@ -116,7 +114,8 @@ describe("gameboard", () => {
     });
     test("ship and coordinates must be recorded if missed", () => {
       gameboard.receiveAttack("A", 8);
-      expect(gameboard.getCoordinate("A", 8)).toBe("miss");
+
+      expect(gameboard.getCoordinate("A", 8)).toBeUndefined();
       expect(gameboard.missedShots).toContainEqual(["A", 8]);
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
     });

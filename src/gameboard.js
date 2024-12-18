@@ -42,7 +42,6 @@ export default class Gameboard {
     return false;
   }
   #recordMiss(column, row) {
-    this.setCoordinate(column, row, "miss");
     const copyMissedShots = [...this.missedShots];
     copyMissedShots.push([column, row]);
     return copyMissedShots;
