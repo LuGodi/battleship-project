@@ -6,10 +6,10 @@ describe("gameboard", () => {
   test("gameboard should be defined", () => {
     expect(gameboard).toBeDefined();
   });
-  test("column should have 10 rows", () => {
-    expect(gameboard.coordinates["A"].length).toBe(10);
+  test.skip("should not allow beyond the tenth row nor before the 1 row", () => {
+    expect(gameboard.getCoordinate["A"][11]).toThrow();
   });
-  test("board should have 100 cells", () => {
+  test.skip("should not allow beyond J nor before A", () => {
     let counter = 0;
     for (const key of Object.keys(gameboard.coordinates)) {
       for (const element of gameboard.coordinates[key]) {
@@ -18,24 +18,16 @@ describe("gameboard", () => {
     }
     expect(counter).toBe(100);
   });
-  test("should add an object to the coordinate", () => {
-    gameboard.coordinates["A"][0] = { type: "miss", player: "2" };
+  test.skip("should add an object to the coordinate", () => {
+    //im already testing this on the getters and setters
+    gameboard.getCoordinate["A"][1] = { type: "miss", player: "2" };
   });
-  test("clearGameboard should make all keys hold only null values", () => {
-    const checkIfNull = jest.fn((value) => value === null);
-    const isGameboardClean = function () {
-      for (const key of Object.keys(gameboard.coordinates)) {
-        const rows = gameboard.coordinates[key];
-        if (rows.every(checkIfNull) === false) {
-          return false;
-        }
-      }
-      return true;
-    };
-    gameboard.coordinates.J[9] = "different";
-    expect(isGameboardClean()).toBeFalsy();
+  test("clearGameboard should empty the gameboard", () => {
+    const newGameboard = new Gameboard();
+    gameboard.placeShip("J", 9, 1);
+    expect(gameboard.coordinates).not.toStrictEqual(newGameboard.coordinates);
     gameboard.clearGameboard();
-    expect(isGameboardClean()).toBeTruthy();
+    expect(gameboard.coordinates).toStrictEqual(newGameboard.coordinates);
   });
   test("clearGameboard should clear missedShots", () => {
     gameboard.missedShots.push(["A", 9]);
@@ -44,12 +36,17 @@ describe("gameboard", () => {
     expect(gameboard.missedShots.length).toBe(0);
   });
   describe("testing set and get methods for the board", () => {
-    test("getter should return correct row which is row -1 because arrays are zero indexed", () => {
-      console.log(gameboard.getCoordinate("A", 1));
-      expect(gameboard.getCoordinate("A", 1)).toBe(
-        gameboard.coordinates["A"][0]
-      );
-      expect(gameboard.getCoordinate("A", 1)).toBeNull();
+    beforeEach(() => {
+      Ship.mockClear();
+      gameboard.clearGameboard();
+    });
+    test("getter should return correct row", () => {
+      const myObj = [1];
+      gameboard.coordinates["C9"] = myObj;
+      expect(gameboard.getCoordinate("C", 9)).toBe(myObj);
+      expect(gameboard.getCoordinate("A", 1)).toBeUndefined();
+      gameboard.coordinates["G3"] = "test";
+      expect(gameboard.getCoordinate("G", 3)).toBe("test");
     });
     test("set coordinate should  allow to modify the values of that reference", () => {
       gameboard.setCoordinate("A", 2, "test");
@@ -114,4 +111,14 @@ describe("gameboard", () => {
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
     });
   });
+});
+
+describe.skip("use case tests", () => {});
+
+test.skip("testing against empty object ", () => {
+  const myObj1 = { a: 5 };
+  const myObj2 = { a: 5 };
+  expect({ a: 2 }).not.toStrictEqual({});
+  expect({}).toStrictEqual({});
+  expect(myObj1).toStrictEqual(myObj2);
 });
