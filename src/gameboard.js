@@ -32,7 +32,9 @@ export default class Gameboard {
     return this.coordinates[column][row - 1];
   }
   setCoordinate(column, row, value) {
-    this.coordinates[column][row - 1] = value;
+    const newCoordinates = structuredClone(this.coordinates);
+    newCoordinates[column][row - 1] = value;
+    this.coordinates = newCoordinates;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, length) {

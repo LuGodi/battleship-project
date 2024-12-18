@@ -52,6 +52,11 @@ describe("gameboard", () => {
       gameboard.setCoordinate("A", 2, null);
       expect(gameboard.getCoordinate("A", 2)).toBeNull();
     });
+    test("reference of the old gameboard and the new gameboard should be different", () => {
+      const oldGameboard = gameboard.coordinates;
+      gameboard.setCoordinate("B", 3, "test");
+      expect(gameboard.coordinates).not.toBe(oldGameboard);
+    });
   });
 
   describe("placing ships", () => {
@@ -80,6 +85,7 @@ describe("gameboard", () => {
     test.todo("should spread ship based on its length through the cells");
   });
 
+  ////
   describe.skip("hitting ships", () => {
     beforeEach(() => {
       Ship.mockClear();
