@@ -4,7 +4,9 @@ export default class Gameboard {
   //missed shots coordinate are not zero indexed
   missedShots = [];
   coordinates = {};
-  constructor() {}
+  constructor() {
+    // this.coordinates =
+  }
   clearGameboard() {
     //this is not pure
     this.coordinates = this.#clear(this.coordinates);
@@ -76,5 +78,11 @@ export default class Gameboard {
   #isColumnValid(column) {
     const regex = /[A-J]/;
     return regex.test(column);
+  }
+  #increaseColumn(column) {
+    const column = coordinates[0];
+    const codeUnit = String.charCodeAt(column);
+    const newColumn = String.fromCharCode(codeUnit);
+    return newColumn;
   }
 }
