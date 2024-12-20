@@ -98,20 +98,54 @@ describe("gameboard", () => {
       const A9 = gameboard.getCoordinate("A", 9);
       expect(A9).toBeInstanceOf(Ship);
       expect(A9).toBe(shipInstance);
+      expect(gameboard.coordinates).toStrictEqual({ A9: shipInstance });
     });
-    test.skip("should spread ship based on its length through the cells", () => {
+    test("when ship is length 1 should only place it once", () => {
+      jest.spyOn(gameboard, "setCoordinate");
+      gameboard.placeShip("A", 9, 1);
+      const A9 = gameboard.getCoordinate("A", 9);
+      expect(gameboard.setCoordinate).toHaveBeenCalledTimes(1);
+      jest.clearAllMocks();
+    });
+    test("should spread ship based on its length through the cells", () => {
       gameboard.placeShip("A", 1, 2, "horizontal");
       console.log;
       const shipInstance = Ship.mock.instances[0];
       //Vou ter que substituir por has se for usar set
       expect("A1" in gameboard.coordinates).toBe(true);
       expect("B1" in gameboard.coordinates).toBe(true);
-      expect(gameboard.getCoordinate(A, 1)).toBe(shipInstace);
-      expect(gameboard.getCoordinate(B, 1)).toBe(shipInstance);
+      expect(gameboard.getCoordinate("A", 1)).toBe(shipInstance);
+      expect(gameboard.getCoordinate("B", 1)).toBe(shipInstance);
+      expect(gameboard.coordinates).toStrictEqual({
+        A1: shipInstance,
+        B1: shipInstance,
+      });
     });
-    describe.skip("testing private properties i know i should not but", () => {
-      test.skip("increase Horizontal should ... increase column", () => {});
+    test.skip("When setCoordinate should be called the same number of times that ship length has", () => {
+      gameboard.placeShip("A", 1, 2);
     });
+    test("should spread vertically as well", () => {
+      gameboard.placeShip("B", 3, 2, "vertical");
+      const shipInstance = Ship.mock.instances[0];
+      expect("B3" in gameboard.coordinates).toBe(true);
+      expect("B4" in gameboard.coordinates).toBe(true);
+      expect(gameboard.getCoordinate("B", 3)).toBe(shipInstance);
+      expect(gameboard.getCoordinate("B", 4)).toBe(shipInstance);
+      expect(gameboard.coordinates).toStrictEqual({
+        B3: shipInstance,
+        B4: shipInstance,
+      });
+    });
+    test("should throw error if spreading is beyond boundaries", () => {
+      gameboard.placeShip("J", 1, 2, "horizontal");
+      expect(() => () => {
+        gameboard.placeShip("J", 1, 2, "horizontal");
+      }).toThrow();
+      //   expect(coordinates.getCoordinate("J", 1)).toBeUndefined();
+    });
+  });
+  describe.skip("testing private properties i know i should not but", () => {
+    test.skip("increase Horizontal should ... increase column", () => {});
   });
 
   ////

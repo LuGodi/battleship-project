@@ -43,23 +43,21 @@ export default class Gameboard {
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, length, direction = "horizontal") {
     console.log(direction);
-    // if (direction !== "horizontal" || direction !== "vertical")
-    //   throw new Error("Invalid direction: should be horizontal or vertical");
+    if (direction !== "horizontal" && direction !== "vertical")
+      throw new Error("Invalid direction: should be horizontal or vertical");
     const ship = new Ship(length);
     let currentLen = 1;
     this.setCoordinate(column, row, ship);
-    // while (currentLen < length);
-    // {
-    //   console.log("this is running");
-    //   //   if (direction === "horizontal") {
-    //   //     column = this.#increaseHorizontal(column);
-    //   //   } else {
-    //   //     row = this.#increaseVertical(row);
-    //   //   }
-
-    //   this.setCoordinate(column, row, ship);
-    //   currentLen += 1;
-    // }
+    while (currentLen < length) {
+      console.log("while");
+      if (direction === "horizontal") {
+        column = this.#increaseHorizontal(column);
+      } else {
+        row = this.#increaseVertical(row);
+      }
+      currentLen++;
+      this.setCoordinate(column, row, ship);
+    }
   }
   receiveAttack(column, row) {
     const ship = this.getCoordinate(column, row);
