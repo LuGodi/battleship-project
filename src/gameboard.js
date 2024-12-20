@@ -35,15 +35,31 @@ export default class Gameboard {
   setCoordinate(column, row, value) {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate");
-    const newCoordinates = structuredClone(this.coordinates);
+    const newCoordinates = { ...this.coordinates };
     const coordinate = column + row.toString();
     newCoordinates[coordinate] = value;
     this.coordinates = newCoordinates;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
-  placeShip(column, row, length) {
+  placeShip(column, row, length, direction = "horizontal") {
+    console.log(direction);
+    // if (direction !== "horizontal" || direction !== "vertical")
+    //   throw new Error("Invalid direction: should be horizontal or vertical");
     const ship = new Ship(length);
+    let currentLen = 1;
     this.setCoordinate(column, row, ship);
+    // while (currentLen < length);
+    // {
+    //   console.log("this is running");
+    //   //   if (direction === "horizontal") {
+    //   //     column = this.#increaseHorizontal(column);
+    //   //   } else {
+    //   //     row = this.#increaseVertical(row);
+    //   //   }
+
+    //   this.setCoordinate(column, row, ship);
+    //   currentLen += 1;
+    // }
   }
   receiveAttack(column, row) {
     const ship = this.getCoordinate(column, row);
@@ -79,10 +95,12 @@ export default class Gameboard {
     const regex = /[A-J]/;
     return regex.test(column);
   }
-  #increaseColumn(column) {
-    const column = coordinates[0];
-    const codeUnit = String.charCodeAt(column);
-    const newColumn = String.fromCharCode(codeUnit);
+  #increaseHorizontal(column) {
+    const codeUnit = column.charCodeAt(0);
+    const newColumn = String.fromCharCode(codeUnit + 1);
     return newColumn;
+  }
+  #increaseVertical(row) {
+    return row + 1;
   }
 }

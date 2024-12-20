@@ -99,7 +99,19 @@ describe("gameboard", () => {
       expect(A9).toBeInstanceOf(Ship);
       expect(A9).toBe(shipInstance);
     });
-    test.todo("should spread ship based on its length through the cells");
+    test.skip("should spread ship based on its length through the cells", () => {
+      gameboard.placeShip("A", 1, 2, "horizontal");
+      console.log;
+      const shipInstance = Ship.mock.instances[0];
+      //Vou ter que substituir por has se for usar set
+      expect("A1" in gameboard.coordinates).toBe(true);
+      expect("B1" in gameboard.coordinates).toBe(true);
+      expect(gameboard.getCoordinate(A, 1)).toBe(shipInstace);
+      expect(gameboard.getCoordinate(B, 1)).toBe(shipInstance);
+    });
+    describe.skip("testing private properties i know i should not but", () => {
+      test.skip("increase Horizontal should ... increase column", () => {});
+    });
   });
 
   ////
