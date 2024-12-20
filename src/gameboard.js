@@ -48,6 +48,21 @@ export default class Gameboard {
     const ship = new Ship(length);
     let currentLen = 1;
     this.setCoordinate(column, row, ship);
+    this.#spreadShip(column, row, ship, direction, length);
+    // while (currentLen < length) {
+    //   console.log("while");
+    //   if (direction === "horizontal") {
+    //     column = this.#increaseHorizontal(column);
+    //   } else {
+    //     row = this.#increaseVertical(row);
+    //   }
+    //   currentLen++;
+    //   this.setCoordinate(column, row, ship);
+    // }
+  }
+  #spreadShip(column, row, ship, direction, length) {
+    let currentLen = 1;
+    //ship.length was causing the test not to work because it is an empty mock, not a mock implementation
     while (currentLen < length) {
       console.log("while");
       if (direction === "horizontal") {
