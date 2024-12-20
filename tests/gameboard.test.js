@@ -21,6 +21,12 @@ describe("gameboard", () => {
     gameboard.clearGameboard();
     expect(gameboard.missedShots.length).toBe(0);
   });
+  test.only("clearGameboard should return a new reference", () => {
+    const old = gameboard.coordinates;
+    gameboard.clearGameboard();
+    expect(old).not.toBe(gameboard.coordinates);
+    expect(gameboard.coordinates).toBe(gameboard.coordinates);
+  });
   describe("testing set and get methods for the board", () => {
     beforeEach(() => {
       Ship.mockClear();

@@ -7,11 +7,22 @@ export default class Gameboard {
   constructor() {}
   clearGameboard() {
     //this is not pure
-    this.coordinates = {};
-    this.#clearMissedShots();
+    this.coordinates = this.#clear(this.coordinates);
+    this.missedShots = this.#clear(this.missedShots);
   }
-  #clearMissedShots() {
-    this.missedShots = [];
+  #clear(value) {
+    let returnVal;
+    switch (value.constructor.name) {
+      case "Array":
+        returnVal = [];
+        break;
+      case "Object":
+        returnVal = {};
+        break;
+      default:
+        throw new TypeError("Value should be an array or an object literal");
+    }
+    return returnVal;
   }
   getCoordinate(column, row) {
     if (this.#isCoordinateValid(column, row) === false)
