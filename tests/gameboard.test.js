@@ -61,10 +61,10 @@ describe("gameboard", () => {
     });
     test("getter should return correct row", () => {
       const myObj = [1];
-      gameboard.setCoordinates("C", 9, myObj);
+      gameboard.setCoordinate("C", 9, myObj);
       expect(gameboard.getCoordinate("C", 9)).toBe(myObj);
       expect(gameboard.getCoordinate("A", 1)).toBeUndefined();
-      gameboard.setCoordinates("G", 3, "test");
+      gameboard.setCoordinate("G", 3, "test");
       expect(gameboard.getCoordinate("G", 3)).toBe("test");
     });
     test("set coordinate should  allow to modify the values of that reference", () => {
@@ -101,7 +101,10 @@ describe("gameboard", () => {
       const A9 = gameboard.getCoordinate("A", 9);
       expect(A9).toBeInstanceOf(Ship);
       expect(A9).toBe(shipInstance);
-      expect(gameboard.coordinates).toStrictEqual({ A9: shipInstance });
+      expect(gameboard.coordinates).toStrictEqual(
+        new Map([["A9", shipInstance]])
+      );
+      expect(gameboard.coordinates.size).toBe(1);
     });
     test("when ship is length 1 should only place it once", () => {
       jest.spyOn(gameboard, "setCoordinate");
