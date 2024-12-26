@@ -118,14 +118,17 @@ describe("gameboard", () => {
       console.log;
       const shipInstance = Ship.mock.instances[0];
       //Vou ter que substituir por has se for usar set
-      expect("A1" in gameboard.coordinates).toBe(true);
-      expect("B1" in gameboard.coordinates).toBe(true);
+      //posso tb por aqui o get
+      expect(gameboard.coordinates.has("A1")).toBe(true);
+      expect(gameboard.coordinates.has("B1")).toBe(true);
       expect(gameboard.getCoordinate("A", 1)).toBe(shipInstance);
       expect(gameboard.getCoordinate("B", 1)).toBe(shipInstance);
-      expect(gameboard.coordinates).toStrictEqual({
-        A1: shipInstance,
-        B1: shipInstance,
-      });
+      expect(gameboard.coordinates).toStrictEqual(
+        new Map([
+          ["A1", shipInstance],
+          ["B1", shipInstance],
+        ])
+      );
     });
     test.skip("When setCoordinate should be called the same number of times that ship length has", () => {
       gameboard.placeShip("A", 1, 2);
@@ -133,14 +136,16 @@ describe("gameboard", () => {
     test("should spread vertically as well", () => {
       gameboard.placeShip("B", 3, 2, "vertical");
       const shipInstance = Ship.mock.instances[0];
-      expect("B3" in gameboard.coordinates).toBe(true);
-      expect("B4" in gameboard.coordinates).toBe(true);
+      expect(gameboard.coordinates.has("B3")).toBe(true);
+      expect(gameboard.coordinates.has("B4")).toBe(true);
       expect(gameboard.getCoordinate("B", 3)).toBe(shipInstance);
       expect(gameboard.getCoordinate("B", 4)).toBe(shipInstance);
-      expect(gameboard.coordinates).toStrictEqual({
-        B3: shipInstance,
-        B4: shipInstance,
-      });
+      expect(gameboard.coordinates).toStrictEqual(
+        new Map([
+          ["B3", shipInstance],
+          ["B4", shipInstance],
+        ])
+      );
     });
     test("should throw error if spreading is beyond boundaries", () => {
       gameboard.placeShip("J", 1, 2, "horizontal");
