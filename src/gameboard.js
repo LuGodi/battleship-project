@@ -38,7 +38,9 @@ export default class Gameboard {
   }
   setCoordinate(column, row, value) {
     if (this.#isCoordinateValid(column, row) === false)
-      throw new Error("Invalid coordinate");
+      throw new Error("Invalid coordinate", {
+        cause: { column: column, row: row },
+      });
     //shallow copy the map
     const newCoordinates = new Map(this.coordinates);
     const coordinate = column + row.toString();
@@ -51,18 +53,20 @@ export default class Gameboard {
       throw new Error("Invalid direction: should be horizontal or vertical");
     const ship = new Ship(length);
     let currentLen = 1;
+    const coordinatesBackup = this.coordinates;
     this.setCoordinate(column, row, ship);
-    this.#spreadShip(column, row, ship, direction, length);
-    // while (currentLen < length) {
-    //   console.log("while");
-    //   if (direction === "horizontal") {
-    //     column = this.#increaseHorizontal(column);
-    //   } else {
-    //     row = this.#increaseVertical(row);
-    //   }
-    //   currentLen++;
-    //   this.setCoordinate(column, row, ship);
-    // }
+    try {
+      this.#spreadShip(column, row, ship, direction, length);
+    } catch (e) {
+      // console.log(e);
+
+      //TODO implement a decent error handler
+      if (e.message === "Invalid coordinate")
+        //would be good if I could get which coordinates got this error
+        console.error(`Failed at ${JSON.stringify(e.cause)}`);
+      this.coordinates = coordinatesBackup;
+      throw new Error(`Invalid coordinates at ${e.cause.column}${e.cause.row}`);
+    }
   }
   #spreadShip(column, row, ship, direction, length) {
     let currentLen = 1;

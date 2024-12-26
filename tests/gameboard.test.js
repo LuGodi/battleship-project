@@ -189,11 +189,33 @@ describe("gameboard", () => {
       );
     });
     test("should throw error if spreading is beyond boundaries", () => {
-      gameboard.placeShip("J", 1, 2, "horizontal");
-      expect(() => () => {
+      expect(() => {
         gameboard.placeShip("J", 1, 2, "horizontal");
       }).toThrow();
-      //   expect(coordinates.getCoordinate("J", 1)).toBeUndefined();
+      //should clean up
+      expect(gameboard.coordinates.has("J", 1)).toBe(false);
+      expect(gameboard.coordinates.has("K", 1)).toBe(false);
+    });
+    test.only("should throw error if spreading beyond boundaries", () => {
+      gameboard.placeShip("A", 1, 1);
+      const shipInstance = Ship.mock.instances[0];
+      const setCoord = jest.spyOn(gameboard, "setCoordinate");
+      expect(() => {
+        gameboard.placeShip("A", 8, 5, "vertical");
+      }).toThrow("A11");
+
+      //TODO implement test that tests all the calls were cleaned
+      console.log(setCoord.mock.calls);
+      const shipInstanceFailed = Ship.mock.instances[1];
+      //should not delete ship at A1
+      expect(gameboard.coordinates.has("A1")).toBe(true);
+      expect(gameboard.getCoordinate("A", 1)).toBe(shipInstance);
+      //should clean up
+      expect(gameboard.coordinates.has("A8")).toBe(false);
+      expect(gameboard.coordinates.has("A9")).toBe(false);
+      expect(gameboard.coordinates.has("A10")).toBe(false);
+      expect(gameboard.coordinates.has("A11")).toBe(false);
+      console.log(Array.from(gameboard.coordinates.entries()));
     });
   });
   describe.skip("testing private properties i know i should not but", () => {
