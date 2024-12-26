@@ -130,8 +130,16 @@ describe("gameboard", () => {
         ])
       );
     });
-    test.skip("When setCoordinate should be called the same number of times that ship length has", () => {
-      gameboard.placeShip("A", 1, 2);
+    test.only("SetCoordinate should be called the same number of times that ship length has", () => {
+      const setCoord = jest.spyOn(gameboard, "setCoordinate");
+      gameboard.placeShip("A", 1, 2, "horizontal");
+      const shipInstance = Ship.mock.instances[0];
+      console.log(setCoord.mock.calls);
+      expect(setCoord).toHaveBeenCalledTimes(2);
+      expect(setCoord).toHaveBeenNthCalledWith(1, "A", 1, shipInstance);
+      expect(setCoord).toHaveBeenNthCalledWith(2, "B", 1, shipInstance);
+
+      // expect(setCoord).toHaveBeenCalledWith(column,row,)
     });
     test("should spread vertically as well", () => {
       gameboard.placeShip("B", 3, 2, "vertical");
