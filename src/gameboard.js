@@ -3,9 +3,9 @@ import Ship from "./ship";
 export default class Gameboard {
   //missed shots coordinate are not zero indexed
   missedShots = [];
-  coordinates = {};
+  coordinates;
   constructor() {
-    // this.coordinates =
+    this.coordinates = new Map();
   }
   clearGameboard() {
     //this is not pure
@@ -21,6 +21,10 @@ export default class Gameboard {
       case "Object":
         returnVal = {};
         break;
+      case "Map":
+        //should I clear or return a new map ?
+        returnVal = new Map();
+        break;
       default:
         throw new TypeError("Value should be an array or an object literal");
     }
@@ -30,19 +34,19 @@ export default class Gameboard {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate");
     const coordinate = column + row.toString();
-    return this.coordinates[coordinate];
+    return this.coordinates.get(coordinate);
   }
   setCoordinate(column, row, value) {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate");
-    const newCoordinates = { ...this.coordinates };
+    //shallow copy the map
+    const newCoordinates = new Map(this.coordinates);
     const coordinate = column + row.toString();
-    newCoordinates[coordinate] = value;
+    newCoordinates.set(coordinate, value);
     this.coordinates = newCoordinates;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, length, direction = "horizontal") {
-    console.log(direction);
     if (direction !== "horizontal" && direction !== "vertical")
       throw new Error("Invalid direction: should be horizontal or vertical");
     const ship = new Ship(length);

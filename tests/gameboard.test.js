@@ -10,9 +10,11 @@ describe("gameboard", () => {
   test("clearGameboard should empty the gameboard", () => {
     //is it unit testing if im calling other functions in the tests?
     const newGameboard = new Gameboard();
+    const gameboard = new Gameboard();
     gameboard.placeShip("J", 9, 1);
     expect(gameboard.coordinates).not.toStrictEqual(newGameboard.coordinates);
     gameboard.clearGameboard();
+    console.log(gameboard.coordinates);
     expect(gameboard.coordinates).toStrictEqual(newGameboard.coordinates);
   });
   test("clearGameboard should clear missedShots", () => {
@@ -23,6 +25,7 @@ describe("gameboard", () => {
   });
   test("clearGameboard should return a new reference", () => {
     const old = gameboard.coordinates;
+    console.log(old);
     gameboard.clearGameboard();
     expect(old).not.toBe(gameboard.coordinates);
     expect(gameboard.coordinates).toBe(gameboard.coordinates);
@@ -58,10 +61,10 @@ describe("gameboard", () => {
     });
     test("getter should return correct row", () => {
       const myObj = [1];
-      gameboard.coordinates["C9"] = myObj;
+      gameboard.setCoordinates("C", 9, myObj);
       expect(gameboard.getCoordinate("C", 9)).toBe(myObj);
       expect(gameboard.getCoordinate("A", 1)).toBeUndefined();
-      gameboard.coordinates["G3"] = "test";
+      gameboard.setCoordinates("G", 3, "test");
       expect(gameboard.getCoordinate("G", 3)).toBe("test");
     });
     test("set coordinate should  allow to modify the values of that reference", () => {
