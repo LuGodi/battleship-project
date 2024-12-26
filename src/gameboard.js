@@ -68,7 +68,6 @@ export default class Gameboard {
     let currentLen = 1;
     //ship.length was causing the test not to work because it is an empty mock, not a mock implementation
     while (currentLen < length) {
-      console.log("while");
       if (direction === "horizontal") {
         column = this.#increaseHorizontal(column);
       } else {

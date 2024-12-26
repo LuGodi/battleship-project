@@ -86,6 +86,9 @@ describe("gameboard", () => {
       Ship.mockClear();
       gameboard.clearGameboard();
     });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
     test("should call Ship constructor", () => {
       //check if placeship called the constructor
 
@@ -130,17 +133,47 @@ describe("gameboard", () => {
         ])
       );
     });
-    test.only("SetCoordinate should be called the same number of times that ship length has", () => {
-      const setCoord = jest.spyOn(gameboard, "setCoordinate");
-      gameboard.placeShip("A", 1, 2, "horizontal");
-      const shipInstance = Ship.mock.instances[0];
-      console.log(setCoord.mock.calls);
-      expect(setCoord).toHaveBeenCalledTimes(2);
-      expect(setCoord).toHaveBeenNthCalledWith(1, "A", 1, shipInstance);
-      expect(setCoord).toHaveBeenNthCalledWith(2, "B", 1, shipInstance);
+    test.each([
+      {
+        placeShip: {
+          column: "A",
+          row: 1,
+          length: 2,
+          direction: "horizontal",
+        },
+        expectedTimesCalled: 2,
+      },
+      {
+        placeShip: {
+          column: "C",
+          row: 3,
+          length: 4,
+          direction: "vertical",
+        },
+        expectedTimesCalled: 4,
+      },
+    ])(
+      "SetCoordinate should be called the same number of times that ship length has : $placeShip.length, expected times called: $expectedTimesCalled",
+      //How could i demonstrate tthis relationship of number of calls = length in a better way?
+      ({ placeShip, expectedTimesCalled }) => {
+        const setCoord = jest.spyOn(gameboard, "setCoordinate");
+        gameboard.placeShip(
+          placeShip.column,
+          placeShip.row,
+          placeShip.length,
+          placeShip.direction
+        );
+        const shipInstance = Ship.mock.instances[0];
+        console.log(setCoord.mock.calls);
+        expect(setCoord).toHaveBeenCalledTimes(expectedTimesCalled);
+        setCoord.mockClear();
+        Ship.mockClear();
+        // expect(setCoord).toHaveBeenNthCalledWith(1, "A", 1, shipInstance);
+        // expect(setCoord).toHaveBeenNthCalledWith(2, "B", 1, shipInstance);
 
-      // expect(setCoord).toHaveBeenCalledWith(column,row,)
-    });
+        // expect(setCoord).toHaveBeenCalledWith(column,row,)
+      }
+    );
     test("should spread vertically as well", () => {
       gameboard.placeShip("B", 3, 2, "vertical");
       const shipInstance = Ship.mock.instances[0];
