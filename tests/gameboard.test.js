@@ -271,8 +271,10 @@ describe("gameboard", () => {
         console.log(Ship.mock.instances);
         gameboard.placeShip("A", 1, 2, "horizontal");
         const shipInstance = gameboard.getCoordinate("A", 1);
+        console.log(shipInstance === gameboard.getCoordinate("B", 1));
         console.log(shipInstance);
         const shipInstance2 = Ship.mock.instances[0];
+        console.log(shipInstance2 === shipInstance);
         console.log(shipInstance2);
         console.log(shipInstance.isSunk());
       });
