@@ -90,6 +90,13 @@ export default class Gameboard {
     this.missedShots = this.#recordMiss(column, row);
     return false;
   }
+  allSunk() {
+    let allSunk = true;
+    this.coordinates.forEach((ship, coordinate) => {
+      if (ship.isSunk() === false) allSunk = false;
+    });
+    return allSunk;
+  }
   #recordMiss(column, row) {
     const copyMissedShots = [...this.missedShots];
     copyMissedShots.push([column, row]);

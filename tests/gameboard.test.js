@@ -196,7 +196,7 @@ describe("gameboard", () => {
       expect(gameboard.coordinates.has("J", 1)).toBe(false);
       expect(gameboard.coordinates.has("K", 1)).toBe(false);
     });
-    test.only("should throw error if spreading beyond boundaries", () => {
+    test("should throw error if spreading beyond boundaries", () => {
       gameboard.placeShip("A", 1, 1);
       const shipInstance = Ship.mock.instances[0];
       const setCoord = jest.spyOn(gameboard, "setCoordinate");
@@ -244,6 +244,47 @@ describe("gameboard", () => {
       expect(gameboard.getCoordinate("A", 8)).toBeUndefined();
       expect(gameboard.missedShots).toContainEqual(["A", 8]);
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
+    });
+    test.todo("should not call hit if the coordinate was already hit once");
+    describe("testing if all sunk", () => {
+      function returnSunk(bool) {
+        return () => {
+          return {
+            isSunk: () => {
+              return bool;
+            },
+          };
+        };
+      }
+      const returnSunkTrue = returnSunk(true);
+      const returnSunkFalse = returnSunk(false);
+      //Not using mocks here would be better ?
+      test.only("should return true if all ships are sunk", () => {
+        Ship.mockImplementationOnce(returnSunkTrue);
+        gameboard.placeShip("A", 1, 2, "horizontal");
+        expect(gameboard.getCoordinate("A", 1).isSunk()).toBe(true);
+        expect(gameboard.getCoordinate("B", 1).isSunk()).toBe(true);
+        expect(gameboard.allSunk()).toBe(true);
+        Ship.mockImplementationOnce(returnSunkFalse);
+        gameboard.placeShip("B", 4, 3, "vertical");
+        expect(gameboard.getCoordinate("B", 4).isSunk()).toBe(false);
+        expect(gameboard.getCoordinate("B", 5).isSunk()).toBe(false);
+        expect(gameboard.getCoordinate("B", 6).isSunk()).toBe(false);
+        //remove this
+        //this is not going to trigger anything beucase its a mock function that is not implemented
+        gameboard.receiveAttack("B", 4);
+        gameboard.receiveAttack("B", 5);
+        gameboard.receiveAttack("B", 6);
+        //remove this
+        const shipInstance = gameboard.getCoordinate("B", 4);
+        console.log((shipInstance.isSunk = () => true));
+        console.log(shipInstance.isSunk());
+        expect(gameboard.allSunk()).toBe(true);
+      });
+      test.only("Ship instance", () => {
+        console.log(gameboard.allSunk());
+        expect(gameboard.allSunk()).toBe(false);
+      });
     });
   });
 });
