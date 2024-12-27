@@ -91,11 +91,10 @@ export default class Gameboard {
     return false;
   }
   allSunk() {
-    let allSunk = true;
-    this.coordinates.forEach((ship, coordinate) => {
-      if (ship.isSunk() === false) allSunk = false;
+    if (this.coordinates.size < 1) return false;
+    return Array.from(this.coordinates.values).every((ship) => {
+      return ship.isSunk() === true;
     });
-    return allSunk;
   }
   #recordMiss(column, row) {
     const copyMissedShots = [...this.missedShots];

@@ -283,6 +283,7 @@ describe("gameboard", () => {
       });
       test.only("Ship instance", () => {
         console.log(gameboard.allSunk());
+        console.log(gameboard.coordinates);
         expect(gameboard.allSunk()).toBe(false);
       });
     });
