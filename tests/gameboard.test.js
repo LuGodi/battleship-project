@@ -1,6 +1,9 @@
 import Gameboard from "../src/gameboard";
 import Ship from "../src/ship";
 jest.mock("../src/ship.js");
+beforeEach(() => {
+  Ship.mockClear();
+});
 describe("gameboard", () => {
   const gameboard = new Gameboard();
   test("gameboard should be defined", () => {
@@ -196,7 +199,7 @@ describe("gameboard", () => {
       expect(gameboard.coordinates.has("J", 1)).toBe(false);
       expect(gameboard.coordinates.has("K", 1)).toBe(false);
     });
-    test.only("should throw error if spreading beyond boundaries", () => {
+    test("should throw error if spreading beyond boundaries", () => {
       gameboard.placeShip("A", 1, 1);
       const shipInstance = Ship.mock.instances[0];
       const setCoord = jest.spyOn(gameboard, "setCoordinate");
@@ -205,6 +208,7 @@ describe("gameboard", () => {
       }).toThrow("A11");
 
       //TODO implement test that tests all the calls were cleaned
+      // with setCoord mock calls
       console.log(setCoord.mock.calls);
       const shipInstanceFailed = Ship.mock.instances[1];
       //should not delete ship at A1
@@ -244,6 +248,34 @@ describe("gameboard", () => {
       expect(gameboard.getCoordinate("A", 8)).toBeUndefined();
       expect(gameboard.missedShots).toContainEqual(["A", 8]);
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
+    });
+    describe.only("should report if all ships sunk", () => {
+      beforeAll(() => {
+        Ship.mockImplementation(() => {
+          return {
+            isSunk: () => {
+              return true;
+            },
+          };
+        });
+      });
+      test("should be able to report if all ships have sunk", () => {
+        // console.log(Ship.getMockImplementation());
+
+        // console.log(Ship.getMockImplementation());
+        // console.log(new Ship(2));
+        // const myship = new Ship();
+        // console.log(myship);
+        // console.log(myship.isSunk());
+
+        console.log(Ship.mock.instances);
+        gameboard.placeShip("A", 1, 2, "horizontal");
+        const shipInstance = gameboard.getCoordinate("A", 1);
+        console.log(shipInstance);
+        const shipInstance2 = Ship.mock.instances[0];
+        console.log(shipInstance2);
+        console.log(shipInstance.isSunk());
+      });
     });
   });
 });
