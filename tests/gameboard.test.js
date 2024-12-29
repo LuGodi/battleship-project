@@ -265,6 +265,8 @@ describe("gameboard", () => {
         expect(gameboard.getCoordinate("A", 1).isSunk()).toBe(true);
         expect(gameboard.getCoordinate("B", 1).isSunk()).toBe(true);
         expect(gameboard.allSunk()).toBe(true);
+        console.log(gameboard.getCoordinate("A", 1));
+        console.log(Ship.mock.instances[0]);
         Ship.mockImplementationOnce(returnSunkFalse);
         gameboard.placeShip("B", 4, 3, "vertical");
         expect(gameboard.getCoordinate("B", 4).isSunk()).toBe(false);
