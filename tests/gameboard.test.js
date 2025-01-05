@@ -247,43 +247,43 @@ describe("gameboard", () => {
     });
     test.todo("should not call hit if the coordinate was already hit once");
     describe("testing if all sunk", () => {
-      function returnSunk(bool) {
-        return () => {
-          return {
-            isSunk: () => {
-              return bool;
-            },
-          };
-        };
-      }
-      const returnSunkTrue = returnSunk(true);
-      const returnSunkFalse = returnSunk(false);
-      //Not using mocks here would be better ?
-      test.only("should return true if all ships are sunk", () => {
-        Ship.mockImplementationOnce(returnSunkTrue);
+      beforeEach(() => {
+        Ship.mockClear();
+        gameboard.clearGameboard();
+      });
+      afterEach(() => {
+        Ship.prototype.isSunk.mockReset();
+      });
+
+      test("should return true if all ships are sunk", () => {
+        console.log(Ship.prototype.isSunk());
+        Ship.prototype.isSunk.mockReturnValue(true);
+        console.log(Ship.prototype.isSunk());
         gameboard.placeShip("A", 1, 2, "horizontal");
         expect(gameboard.getCoordinate("A", 1).isSunk()).toBe(true);
         expect(gameboard.getCoordinate("B", 1).isSunk()).toBe(true);
         expect(gameboard.allSunk()).toBe(true);
-        console.log(gameboard.getCoordinate("A", 1));
-        console.log(Ship.mock.instances[0]);
-        Ship.mockImplementationOnce(returnSunkFalse);
+        // console.log(gameboard.getCoordinate("A", 1));
+        // console.log(Ship.mock.instances[0]);
+        //now this returns true
+        // console.log(Ship.mock.instances[0] === gameboard.getCoordinate("A", 1));
+
+        //remove this
+        const shipInstance = gameboard.getCoordinate("B", 4);
+        // console.log((shipInstance.isSunk = () => true));
+        // console.log(shipInstance.isSunk());
+        expect(gameboard.allSunk()).toBe(true);
+      });
+      test.todo("should call all sunk in all ship instances");
+      test("should return false if all ships are sunk", () => {
+        Ship.prototype.isSunk.mockReturnValue(false);
         gameboard.placeShip("B", 4, 3, "vertical");
         expect(gameboard.getCoordinate("B", 4).isSunk()).toBe(false);
         expect(gameboard.getCoordinate("B", 5).isSunk()).toBe(false);
         expect(gameboard.getCoordinate("B", 6).isSunk()).toBe(false);
-        //remove this
-        //this is not going to trigger anything beucase its a mock function that is not implemented
-        gameboard.receiveAttack("B", 4);
-        gameboard.receiveAttack("B", 5);
-        gameboard.receiveAttack("B", 6);
-        //remove this
-        const shipInstance = gameboard.getCoordinate("B", 4);
-        console.log((shipInstance.isSunk = () => true));
-        console.log(shipInstance.isSunk());
-        expect(gameboard.allSunk()).toBe(true);
       });
-      test.only("Ship instance", () => {
+      test.skip("should return false if all but one ship is sunk", () => {});
+      test("Ship instance", () => {
         console.log(gameboard.allSunk());
         console.log(gameboard.coordinates);
         expect(gameboard.allSunk()).toBe(false);
