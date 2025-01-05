@@ -254,7 +254,7 @@ describe("gameboard", () => {
       afterEach(() => {
         Ship.prototype.isSunk.mockReset();
       });
-      test.only("All sunk should call isSunk in all instances, testing with one instance", () => {
+      test.only("All sunk should call isSunk on the ship instance, testing with one instance", () => {
         const gameboard = new Gameboard();
         gameboard.placeShip("A", 1, 3);
         const shipInstance = Ship.mock.instances[0];
@@ -271,22 +271,64 @@ describe("gameboard", () => {
         // expect(gameboard.getCoordinate("A", 1).isSunk()).toBe(true);
         // expect(gameboard.getCoordinate("B", 1).isSunk()).toBe(true);
         expect(gameboard.allSunk()).toBe(true);
+        //its going to get called for every time shipInstance appears on the array, this means will be called the ship`s length number of times
+        //will not be called if an instance returns false
         expect(shipInstance.isSunk).toHaveBeenCalledTimes(2);
+        expect(Ship.prototype.isSunk).toHaveBeenCalledTimes(2);
       });
-      test.only("should return true if all ships are sunk, more than one ship", () => {});
-      test.todo("should call all sunk in all ship instances");
-      test("should return false if all ships are sunk", () => {
+      test.only("should return true if all ships are sunk, more than one ship", () => {
+        Ship.prototype.isSunk.mockReturnValue(true);
+        gameboard.placeShip("A", 1, 2, "vertical");
+        gameboard.placeShip("D", 1, 3, "vertical");
+        const shipInstance1 = Ship.mock.instances[0];
+        const shipInstance2 = Ship.mock.instances[1];
+        expect(Ship.prototype.isSunk).not.toHaveBeenCalled();
+        expect(gameboard.allSunk()).toBe(true);
+        //I am testing the implementation here, if allSunk changes its implementation
+        //the number of times the method is called for each instance will differ
+        expect(Ship.prototype.isSunk).toHaveBeenCalledTimes(5);
+        expect(shipInstance1.isSunk).toHaveBeenCalledTimes(2);
+        expect(shipInstance2.isSunk).toHaveBeenCalledTimes(3);
+        console.log(Ship.prototype.isSunk.mock.calls);
+        console.log(Ship.prototype.isSunk.mock.results);
+        console.log(shipInstance1.isSunk.mock.calls);
+        console.log(shipInstance2.isSunk.mock.calls);
+      });
+
+      test.only("should return false if no ships are sunk", () => {
         Ship.prototype.isSunk.mockReturnValue(false);
         gameboard.placeShip("B", 4, 3, "vertical");
-        expect(gameboard.getCoordinate("B", 4).isSunk()).toBe(false);
-        expect(gameboard.getCoordinate("B", 5).isSunk()).toBe(false);
-        expect(gameboard.getCoordinate("B", 6).isSunk()).toBe(false);
-      });
-      test.skip("should return false if all but one ship is sunk", () => {});
-      test("Ship instance", () => {
-        console.log(gameboard.allSunk());
-        console.log(gameboard.coordinates);
         expect(gameboard.allSunk()).toBe(false);
+        expect(Ship.prototype.isSunk).toHaveBeenCalledTimes(1);
+        gameboard.placeShip("C", 1, 1);
+        expect(gameboard.allSunk()).toBe(false);
+      });
+      test.only("should return false if only one ship is sunk", () => {
+        Ship.prototype.isSunk
+          .mockReturnValueOnce(true)
+          .mockReturnValueOnce(true)
+          .mockReturnValueOnce(true)
+          .mockReturnValueOnce(false);
+
+        const gameboard = new Gameboard();
+        gameboard.placeShip("A", 1, 5, "vertical");
+        gameboard.placeShip("B", 1, 3, "vertical");
+        gameboard.placeShip("D", 3, 2, "vertical");
+        gameboard.placeShip("F", 3, 2, "vertical");
+        expect(gameboard.allSunk()).toBe(false);
+        expect(Ship.prototype.isSunk).toHaveBeenCalled();
+        //remove this console.log
+        console.log(gameboard.coordinates.keys());
+        //remove later
+        const instance1 = Ship.mock.instances[0];
+        const instance2 = Ship.mock.instances[1];
+        const instance3 = Ship.mock.instances[2];
+        const instance4 = Ship.mock.instances[3];
+        console.log(instance1.isSunk.mock.calls);
+        console.log(instance2.isSunk.mock.calls);
+        console.log(instance3.isSunk.mock.calls);
+        console.log(instance4.isSunk.mock.calls);
+        console.log(Ship.prototype.isSunk.mock.results);
       });
     });
   });
