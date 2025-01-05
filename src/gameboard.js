@@ -91,8 +91,11 @@ export default class Gameboard {
     return false;
   }
   allSunk() {
-    if (this.coordinates.size < 1) return false;
-    return Array.from(this.coordinates.values).every((ship) => {
+    if (this.coordinates.size < 1) {
+      console.log("there are no ships");
+      return false;
+    }
+    return Array.from(this.coordinates.values()).every((ship) => {
       return ship.isSunk() === true;
     });
   }
