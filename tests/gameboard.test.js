@@ -67,12 +67,13 @@ describe("gameboard", () => {
       gameboard.setCoordinate("G", 3, "test");
       expect(gameboard.getCoordinate("G", 3)).toBe("test");
     });
-    test("set coordinate should  allow to modify the values of that reference", () => {
+    test("set coordinate should not allow to modify the values of that reference", () => {
       gameboard.setCoordinate("A", 2, "test");
 
       expect(gameboard.getCoordinate("A", 2)).toBe("test");
-      gameboard.setCoordinate("A", 2, null);
-      expect(gameboard.getCoordinate("A", 2)).toBeNull();
+      expect(() => gameboard.setCoordinate("A", 2, null)).toThrow(
+        "Coordinate already taken"
+      );
     });
     test("reference of the old gameboard and the new gameboard should be different", () => {
       const oldGameboard = gameboard.coordinates;
@@ -203,7 +204,6 @@ describe("gameboard", () => {
       expect(() => {
         gameboard.placeShip("A", 8, 5, "vertical");
       }).toThrow("A11");
-      test.todo("Should throw error if theres a ship already on the location");
       //TODO implement test that tests all the calls were cleaned
       console.log(setCoord.mock.calls);
       const shipInstanceFailed = Ship.mock.instances[1];
@@ -217,6 +217,41 @@ describe("gameboard", () => {
       expect(gameboard.coordinates.has("A11")).toBe(false);
       console.log(Array.from(gameboard.coordinates.entries()));
     });
+    test("should throw error if ship is placed in an invalid coordinate", () => {
+      expect(() => gameboard.placeShip("L", 1)).toThrow("Invalid coordinate");
+      expect(() => gameboard.placeShip("A", 1)).not.toThrow();
+    });
+    test("Should throw error if theres a ship already on the location", () => {
+      gameboard.placeShip("A", 1);
+      expect(() => gameboard.placeShip("A", 1)).toThrow();
+    });
+    test("Should throw error if ship spreads to a cell already occupied by another ship", () => {
+      gameboard.placeShip("A", 3);
+      expect(() => gameboard.placeShip("A", 1, 5, "vertical")).toThrow(
+        "Coordinate already taken"
+      );
+    });
+    test("After Error is thrown board should return to how it was", () => {
+      gameboard.placeShip("A", 3);
+      let board = gameboard.coordinates;
+      gameboard.placeShip("F", 1);
+      let board2 = gameboard.coordinates;
+      expect(gameboard.coordinates).not.toBe(board);
+      expect(() => gameboard.placeShip("A", 1, 5, "vertical")).toThrow();
+      expect(gameboard.coordinates).toBe(board2);
+    });
+    test("After Error is thrown board should return to how it was", () => {
+      gameboard.placeShip("A", 3);
+      let board = gameboard.coordinates;
+      try {
+        gameboard.placeShip("A", 3);
+      } catch (e) {
+        expect(gameboard.coordinates).toBe(board);
+      }
+    });
+    test.todo(
+      "Should reverse the board to how it was before the attempted that threw the error"
+    );
   });
   describe.skip("testing private properties i know i should not but", () => {
     test.skip("increase Horizontal should ... increase column", () => {});
@@ -254,7 +289,7 @@ describe("gameboard", () => {
       afterEach(() => {
         Ship.prototype.isSunk.mockReset();
       });
-      test.only("All sunk should call isSunk on the ship instance, testing with one instance", () => {
+      test("All sunk should call isSunk on the ship instance, testing with one instance", () => {
         const gameboard = new Gameboard();
         gameboard.placeShip("A", 1, 3);
         const shipInstance = Ship.mock.instances[0];
@@ -263,7 +298,7 @@ describe("gameboard", () => {
         gameboard.allSunk();
         expect(shipInstance.isSunk).toHaveBeenCalled();
       });
-      test.only("should return true if all ships are sunk, testing only one", () => {
+      test("should return true if all ships are sunk, testing only one", () => {
         Ship.prototype.isSunk.mockReturnValue(true);
         gameboard.placeShip("A", 1, 2, "horizontal");
         const shipInstance = Ship.mock.instances[0];
@@ -276,7 +311,7 @@ describe("gameboard", () => {
         expect(shipInstance.isSunk).toHaveBeenCalledTimes(2);
         expect(Ship.prototype.isSunk).toHaveBeenCalledTimes(2);
       });
-      test.only("should return true if all ships are sunk, more than one ship", () => {
+      test("should return true if all ships are sunk, more than one ship", () => {
         Ship.prototype.isSunk.mockReturnValue(true);
         gameboard.placeShip("A", 1, 2, "vertical");
         gameboard.placeShip("D", 1, 3, "vertical");
@@ -295,7 +330,7 @@ describe("gameboard", () => {
         console.log(shipInstance2.isSunk.mock.calls);
       });
 
-      test.only("should return false if no ships are sunk", () => {
+      test("should return false if no ships are sunk", () => {
         Ship.prototype.isSunk.mockReturnValue(false);
         gameboard.placeShip("B", 4, 3, "vertical");
         expect(gameboard.allSunk()).toBe(false);
@@ -303,7 +338,7 @@ describe("gameboard", () => {
         gameboard.placeShip("C", 1, 1);
         expect(gameboard.allSunk()).toBe(false);
       });
-      test.only("should return false if only one ship is sunk", () => {
+      test("should return false if only one ship is sunk", () => {
         Ship.prototype.isSunk
           .mockReturnValueOnce(true)
           .mockReturnValueOnce(true)

@@ -30,17 +30,32 @@ export default class Gameboard {
     }
     return returnVal;
   }
+  #isCoordinateOccupied(column, row) {
+    const coordinate = column + row.toString();
+    return this.coordinates.has(coordinate);
+  }
   getCoordinate(column, row) {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate");
     const coordinate = column + row.toString();
     return this.coordinates.get(coordinate);
   }
+  updateCoordinate(column, row, value) {
+    throw new Error("Not implemented");
+  }
   setCoordinate(column, row, value) {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate", {
         cause: { column: column, row: row },
       });
+    if (this.#isCoordinateOccupied(column, row) === true) {
+      throw new Error(
+        "Coordinate already taken, to overwrite use updateCoordinate",
+        {
+          cause: { column: column, row: row },
+        }
+      );
+    }
     //shallow copy the map
     const newCoordinates = new Map(this.coordinates);
     const coordinate = column + row.toString();
@@ -54,6 +69,7 @@ export default class Gameboard {
     const ship = new Ship(length);
     let currentLen = 1;
     const coordinatesBackup = this.coordinates;
+    //Can simply delete the coordinates backup and move setCoordinate to the try block, that why if an error is thrown it won't even set a coordinate to hold a ship
     this.setCoordinate(column, row, ship);
     try {
       this.#spreadShip(column, row, ship, direction, length);
@@ -61,11 +77,14 @@ export default class Gameboard {
       // console.log(e);
 
       //TODO implement a decent error handler
-      if (e.message === "Invalid coordinate")
+      if (
+        e.message === "Invalid coordinate" ||
+        e.message === "Coordinate already taken"
+      )
         //would be good if I could get which coordinates got this error
-        console.error(`Failed at ${JSON.stringify(e.cause)}`);
+        console.error(`Failed at ${JSON.stringify(e.cause)}, ${e.message}`);
       this.coordinates = coordinatesBackup;
-      throw new Error(`Invalid coordinates at ${e.cause.column}${e.cause.row}`);
+      throw new Error(`${e.message} at ${e.cause.column}${e.cause.row}`);
     }
   }
   #spreadShip(column, row, ship, direction, length) {
