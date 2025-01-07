@@ -106,22 +106,24 @@ export default class Gameboard {
   }
 
   receiveAttack(column, row) {
+    const coordinate = this.#toBoardCoordinates(column, row);
     const ship = this.getCoordinate(column, row);
+
     // if (this.attacksReceived([column, row]))
     const isInArray = (element) => {
       return element[0] === column && element[1] === row;
     };
-    if (this.attacksReceived.some(isInArray) === true)
+    if (this.attacksReceived.includes(coordinate) === true)
       throw new Error(
         `Unable to attack: coordinate has already been hit at ${column}${row}`
       );
 
     if (ship instanceof Ship) {
       ship.hit();
-      this.attacksReceived = this.#recordAttack(column, row);
+      this.#recordAttack(column, row);
       return true;
     }
-    this.missedShots = this.#recordMiss(column, row);
+    this.#recordMiss(column, row);
     return false;
   }
   allSunk() {
@@ -133,15 +135,16 @@ export default class Gameboard {
       return ship.isSunk() === true;
     });
   }
+  //not pure
   #recordMiss(column, row) {
     const copyMissedShots = [...this.missedShots];
-    copyMissedShots.push([column, row]);
-    return copyMissedShots;
+    copyMissedShots.push(this.#toBoardCoordinates(column, row));
+    this.missedShots = copyMissedShots;
   }
   #recordAttack(column, row) {
     const copyReceivedAttacks = [...this.attacksReceived];
-    copyReceivedAttacks.push([column, row]);
-    return copyReceivedAttacks;
+    copyReceivedAttacks.push(this.#toBoardCoordinates(column, row));
+    this.attacksReceived = copyReceivedAttacks;
   }
   #isCoordinateValid(column, row) {
     //use regex here

@@ -277,8 +277,8 @@ describe("gameboard", () => {
       gameboard.receiveAttack("A", 8);
 
       expect(gameboard.getCoordinate("A", 8)).toBeUndefined();
-      expect(gameboard.missedShots).toContainEqual(["A", 8]);
-      expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
+      expect(gameboard.missedShots).toContainEqual("A8");
+      expect(gameboard.missedShots).not.toContainEqual("B3");
     });
     test("should not call hit if the coordinate was already hit once", () => {
       gameboard.placeShip("A", 1);
