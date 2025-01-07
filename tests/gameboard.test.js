@@ -23,6 +23,12 @@ describe("gameboard", () => {
     gameboard.clearGameboard();
     expect(gameboard.missedShots.length).toBe(0);
   });
+  test("clearGameboard should clear attacksReceived", () => {
+    gameboard.attacksReceived.push("A1");
+    expect(gameboard.attacksReceived.length).toBe(1);
+    gameboard.clearGameboard();
+    expect(gameboard.attacksReceived.length).toBe(0);
+  });
   test("clearGameboard should return a new reference", () => {
     const old = gameboard.coordinates;
     console.log(old);
@@ -289,7 +295,13 @@ describe("gameboard", () => {
       );
       expect(Ship.mock.instances[0].hit).toHaveBeenCalledTimes(1);
     });
-    test.todo("should not be able to attack if its not a ship");
+    test("even if its a miss should not be able to attack twice", () => {
+      gameboard.receiveAttack("A", 1);
+      expect(gameboard.missedShots).toContainEqual("A1");
+      expect(() => gameboard.receiveAttack("A", 1)).toThrow(
+        "Unable to attack: coordinate has already been hit"
+      );
+    });
     describe("testing if all sunk", () => {
       beforeEach(() => {
         Ship.mockClear();

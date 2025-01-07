@@ -12,6 +12,7 @@ export default class Gameboard {
     //this is not pure
     this.coordinates = this.#clear(this.coordinates);
     this.missedShots = this.#clear(this.missedShots);
+    this.attacksReceived = this.#clear(this.attacksReceived);
   }
   #clear(value) {
     let returnVal;
@@ -108,17 +109,12 @@ export default class Gameboard {
   receiveAttack(column, row) {
     const coordinate = this.#toBoardCoordinates(column, row);
     const ship = this.getCoordinate(column, row);
-
-    // if (this.attacksReceived([column, row]))
-    const isInArray = (element) => {
-      return element[0] === column && element[1] === row;
-    };
-    if (this.attacksReceived.includes(coordinate) === true)
+    const receivedHits = this.attacksReceived.concat(this.missedShots);
+    if (receivedHits.includes(coordinate) === true)
       throw new Error(
         `Unable to attack: coordinate has already been hit at ${column}${row}`
       );
-
-    if (ship instanceof Ship) {
+    else if (ship instanceof Ship) {
       ship.hit();
       this.#recordAttack(column, row);
       return true;
