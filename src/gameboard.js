@@ -3,6 +3,7 @@ import Ship from "./ship";
 export default class Gameboard {
   //missed shots coordinate are not zero indexed
   missedShots = [];
+  attacksReceived = [];
   coordinates;
   constructor() {
     this.coordinates = new Map();
@@ -31,13 +32,13 @@ export default class Gameboard {
     return returnVal;
   }
   #isCoordinateOccupied(column, row) {
-    const coordinate = column + row.toString();
+    const coordinate = this.#toBoardCoordinates(column, row);
     return this.coordinates.has(coordinate);
   }
   getCoordinate(column, row) {
     if (this.#isCoordinateValid(column, row) === false)
       throw new Error("Invalid coordinate");
-    const coordinate = column + row.toString();
+    const coordinate = this.#toBoardCoordinates(column, row);
     return this.coordinates.get(coordinate);
   }
   updateCoordinate(column, row, value) {
@@ -58,9 +59,13 @@ export default class Gameboard {
     }
     //shallow copy the map
     const newCoordinates = new Map(this.coordinates);
-    const coordinate = column + row.toString();
+    const coordinate = this.#toBoardCoordinates(column, row);
     newCoordinates.set(coordinate, value);
     this.coordinates = newCoordinates;
+  }
+  #toBoardCoordinates(column, row) {
+    const coordinate = column + row.toString();
+    return coordinate;
   }
   //it actually states that placeShip should make a new instance of ship, but how is the player going to decide which ship it is?
   placeShip(column, row, length, direction = "horizontal") {
@@ -101,6 +106,7 @@ export default class Gameboard {
   }
   receiveAttack(column, row) {
     const ship = this.getCoordinate(column, row);
+    // if (this.attacksReceived([column, row]))
     if (ship instanceof Ship) {
       ship.hit();
       return true;
