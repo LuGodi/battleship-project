@@ -280,7 +280,15 @@ describe("gameboard", () => {
       expect(gameboard.missedShots).toContainEqual(["A", 8]);
       expect(gameboard.missedShots).not.toContainEqual(["B", 3]);
     });
-    test.todo("should not call hit if the coordinate was already hit once");
+    test.only("should not call hit if the coordinate was already hit once", () => {
+      gameboard.placeShip("A", 1);
+      gameboard.receiveAttack("A", 1);
+      expect(Ship.mock.instances[0].hit).toHaveBeenCalledTimes(1);
+      expect(() => gameboard.receiveAttack("A", 1)).toThrow(
+        "Unable to attack: coordinate has already been hit"
+      );
+      expect(Ship.mock.instances[0].hit).toHaveBeenCalledTimes(1);
+    });
     describe("testing if all sunk", () => {
       beforeEach(() => {
         Ship.mockClear();

@@ -69,9 +69,8 @@ export default class Gameboard {
     const ship = new Ship(length);
     let currentLen = 1;
     const coordinatesBackup = this.coordinates;
-    //Can simply delete the coordinates backup and move setCoordinate to the try block, that why if an error is thrown it won't even set a coordinate to hold a ship
-    this.setCoordinate(column, row, ship);
     try {
+      this.setCoordinate(column, row, ship);
       this.#spreadShip(column, row, ship, direction, length);
     } catch (e) {
       // console.log(e);
