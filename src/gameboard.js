@@ -104,11 +104,21 @@ export default class Gameboard {
       this.setCoordinate(column, row, ship);
     }
   }
+
   receiveAttack(column, row) {
     const ship = this.getCoordinate(column, row);
     // if (this.attacksReceived([column, row]))
+    const isInArray = (element) => {
+      return element[0] === column && element[1] === row;
+    };
+    if (this.attacksReceived.some(isInArray) === true)
+      throw new Error(
+        `Unable to attack: coordinate has already been hit at ${column}${row}`
+      );
+
     if (ship instanceof Ship) {
       ship.hit();
+      this.attacksReceived = this.#recordAttack(column, row);
       return true;
     }
     this.missedShots = this.#recordMiss(column, row);
@@ -127,6 +137,11 @@ export default class Gameboard {
     const copyMissedShots = [...this.missedShots];
     copyMissedShots.push([column, row]);
     return copyMissedShots;
+  }
+  #recordAttack(column, row) {
+    const copyReceivedAttacks = [...this.attacksReceived];
+    copyReceivedAttacks.push([column, row]);
+    return copyReceivedAttacks;
   }
   #isCoordinateValid(column, row) {
     //use regex here
