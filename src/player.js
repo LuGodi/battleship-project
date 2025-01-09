@@ -5,9 +5,7 @@ export default class Player {
   gameboard;
   constructor(type) {
     this.gameboard = new Gameboard();
-    // if (type !== "real" || type !== "computer")
-    //   throw new Error("Player should be real or computer");
-    // this.type = type;
+    if (type) this.type = type;
   }
   set type(playerType) {
     if (playerType !== "real" && playerType !== "computer")

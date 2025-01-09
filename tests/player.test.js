@@ -24,4 +24,9 @@ describe("Testing player class", () => {
     expect(player2.gameboard).toBeInstanceOf(Gameboard);
     expect(player1.gameboard).not.toBe(player2.gameboard);
   });
+  test("Should take an optional argument that sets the type of player", () => {
+    const player = new Player("computer");
+    expect(player.type).toBe("computer");
+    expect(() => new Player("something")).toThrow(TypeError);
+  });
 });
