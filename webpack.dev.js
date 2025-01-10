@@ -6,4 +6,12 @@ module.exports = merge(common, {
   devtool: "inline-source-map",
   watch: true,
   cache: false,
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
 });
