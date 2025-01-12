@@ -1,0 +1,27 @@
+:root {
+  --rows: 10;
+  --columns: 10;
+}
+
+.board-container {
+  background-color: rgb(189, 207, 252);
+  height: 500px;
+  width: 500px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 5px;
+  padding: 5px;
+}
+.board-container > div {
+  border: 1px solid rgb(55, 0, 255);
+  background-color: rgb(116, 142, 207);
+}
+.board-column-indicators {
+  grid-area: columnHeaders;
+  grid-row: 1/-1;
+}
+.board-row-indicators {
+  grid-area: rowHeaders;
+  grid-column: 1/-1;
+}
