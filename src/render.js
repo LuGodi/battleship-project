@@ -1,6 +1,24 @@
 import "./board.css";
-export class Render {}
+export class Render {
+  static cachedDom = {
+    body: document.querySelector("body"),
+    statusNav: document.querySelector("nav"),
+  };
+  static setNavStatus(playerName, phase) {
+    this.cachedDom.statusNav.textContent = `${PlayerName}'s Turn`;
+  }
+  static moveList() {}
 
+  static gameStartScreen() {}
+  static switchingPlayerScreen(fromPlayer, toPlayer) {}
+  static playerMoveScreen(currentPlayer) {}
+  static GameoverScreen() {}
+  static playerSetupScreen(currentPlayer) {}
+}
+
+// export class UI(){
+
+// }
 export class Board {
   constructor(rows, columns, className) {
     // this.init(rows, columns, className);
