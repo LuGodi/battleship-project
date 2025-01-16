@@ -1,19 +1,41 @@
 import "./board.css";
+import Game from "./game.js";
 export class Render {
   static cachedDom = {
     body: document.querySelector("body"),
-    statusNav: document.querySelector("nav"),
+    statusNav: document.querySelector(".header"),
+    mainContainer: document.querySelector(".main-container"),
   };
-  static setNavStatus(playerName, phase) {
-    this.cachedDom.statusNav.textContent = `${PlayerName}'s Turn`;
+  static setTurn(currentPlayerName, phase) {
+    this.cachedDom.statusNav.textContent = `${currentPlayerName.name}'s Turn`;
   }
-  static moveList() {}
+  static setHeader(title) {
+    this.cachedDom.statusNav.textContent = title;
+  }
+  static pastMovesList() {}
 
-  static gameStartScreen() {}
+  static gameStartScreen() {
+    //TODO memoize
+    const gameStartBtn = document.createElement("button");
+    gameStartBtn.textContent = "Start";
+    gameStartBtn.addEventListener("click", (event) => {
+      Game.start();
+      this.playerSetupScreen();
+    });
+    Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
+  }
+  static playerSetupScreen(currentPlayer) {
+    //TODO
+    for (let player of Game.players) {
+      Game.populatePredetermined(player);
+    }
+    this.playerMoveScreen();
+  }
   static switchingPlayerScreen(fromPlayer, toPlayer) {}
-  static playerMoveScreen(currentPlayer) {}
+  static playerMoveScreen() {
+    this.setTurn(Game.getCurrentPlayer());
+  }
   static GameoverScreen() {}
-  static playerSetupScreen(currentPlayer) {}
 }
 
 // export class UI(){

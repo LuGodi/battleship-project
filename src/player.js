@@ -2,9 +2,11 @@ import Gameboard from "./gameboard";
 
 export default class Player {
   #type = null;
+  name;
   gameboard;
-  constructor(type) {
+  constructor(type, name) {
     this.gameboard = new Gameboard();
+    this.name = name;
     if (type) this.type = type;
   }
   set type(playerType) {
