@@ -6,9 +6,7 @@ export class Render {
     statusNav: document.querySelector(".header"),
     mainContainer: document.querySelector(".main-container"),
   };
-  static setTurn(currentPlayerName, phase) {
-    this.cachedDom.statusNav.textContent = `${currentPlayerName.name}'s Turn`;
-  }
+
   static setHeader(title) {
     this.cachedDom.statusNav.textContent = title;
   }
@@ -23,39 +21,85 @@ export class Render {
       this.playerSetupScreen();
     });
     Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
+    this.cachedDom.statusNav.textContent = "BattleShip";
   }
   static playerSetupScreen(currentPlayer) {
     //TODO
-    for (let player of Game.players) {
-      Game.populatePredetermined(player);
-    }
-    this.playerMoveScreen();
+    Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
+    const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
+
+    const populateBtn = document.createElement("button");
+    populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
+    populateBtn.addEventListener("click", () =>
+      Game.populatePredetermined(Game.getCurrentPlayer())
+    );
+    const doneBtn = document.createElement("button");
+    doneBtn.textContent = `Done`;
+    doneBtn.addEventListener("click", () => {
+      this.playerMoveScreen();
+    });
+    shipsDiv.append(populateBtn, doneBtn);
+
+    const board = new Board();
+    this.cachedDom.mainContainer.replaceChildren(
+      shipsDiv,
+      board.getRenderedBoard()
+    );
+    board.loopBoard((cell) =>
+      console.log("looping board \n", cell.dataset.coordinates)
+    );
   }
-  static switchingPlayerScreen(fromPlayer, toPlayer) {}
+  static switchingPlayerScreen(fromPlayer, toPlayer) {
+    //set a timer to change the screen and board to the other player
+  }
   static playerMoveScreen() {
-    this.setTurn(Game.getCurrentPlayer());
+    this.cachedDom.mainContainer.replaceChildren();
+    this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static GameoverScreen() {}
 }
-
+class renderUtil {
+  static makeElement(element, className) {
+    const myEl = document.createElement(element);
+    myEl.classList.add(className);
+    return myEl;
+  }
+}
 // export class UI(){
 
 // }
 export class Board {
-  constructor(rows, columns, className) {
-    // this.init(rows, columns, className);
+  rows;
+  columns;
+  className;
+  renderedBoard;
+  constructor(rows = 10, columns = 10, className = "board-container") {
+    this.rows = rows;
+    this.columns = columns;
+    this.className = className;
+    this.init(rows, columns, className);
   }
-  init(rows, columns, className) {
+  init() {
+    const rows = this.rows;
+    const columns = this.columns;
+    const className = this.className;
     const cellNumber = columns * rows;
-
+    const alphabet = "ABCDEFGHIJ";
     const cells = [];
-    //
+    //row 0 is the label for the columns
+    //column 0 is the label for the rows
 
-    for (let i = 0; i <= rows; i++) {
-      for (let j = 0; j <= columns; j++) {
+    for (let row = 0; row <= rows; row++) {
+      for (let column = 0; column <= columns; column++) {
         const cell = document.createElement("div");
-        cell.dataset.column = j;
-        cell.dataset.row = i;
+        cell.dataset.column = column;
+        cell.dataset.row = row;
+        cell.dataset.isLabel = true;
+        if (row > 0 && column > 0) {
+          //strings are zero indexed but the column is not
+          cell.dataset.isLabel = false;
+          cell.dataset.coordinates = `${alphabet[column - 1]}${row}`;
+        }
 
         cells.push(cell);
       }
@@ -64,32 +108,19 @@ export class Board {
     const boardContainer = document.createElement("div");
     boardContainer.append(...cells);
     boardContainer.classList.add(className);
-    return boardContainer;
+    this.renderedBoard = boardContainer;
+    console.log(this.renderedBoard);
+    // return boardContainer;
   }
-  #generateCells(rows, columns) {}
-  #columnIndicators(numCol) {
-    const cssClass = "board-column-indicator";
-    let letterCode = 65;
-    const container = document.createElement("div");
-    for (let i = 0; i < numCol; i++) {
-      const div = document.createElement("div");
-      div.classList.add(cssClass);
-      div.textContent = String.fromCharCode(letterCode++);
-      container.appendChild(div);
-    }
+  getRenderedBoard() {
+    return this.renderedBoard;
+  }
+  updateBoard(gameboardInfo) {}
 
-    container.classList.add("board-column-indicators");
-    return container;
-  }
-  #rowIndicators(numRows) {
-    const cssClass = "bord-row-indicator";
-    const container = document.createElement("div");
-    for (let i = 0; i < numRows; i++) {
-      const row = document.createElement("div");
-      row.textContent = i;
-      row.classList.add(cssClass);
-      container.appendChild(row);
+  loopBoard(callback) {
+    for (let cell of this.renderedBoard.children) {
+      if (cell.dataset.isLabel === true) continue;
+      callback(cell);
     }
-    container.classList.add("bord-row-indicators");
   }
 }
