@@ -30,12 +30,15 @@ export class Render {
 
     const populateBtn = document.createElement("button");
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
+    const doneBtn = document.createElement("button");
+    doneBtn.textContent = `Done`;
     populateBtn.addEventListener("click", () =>
       Game.populatePredetermined(Game.getCurrentPlayer())
     );
-    const doneBtn = document.createElement("button");
-    doneBtn.textContent = `Done`;
     doneBtn.addEventListener("click", () => {
+      //TODO  this logic shouldnt be here, renderer should only control the rendered elements
+      console.log(Game.getCurrentPlayer().gameboard);
+      console.log(Game.isPlayerReady(Game.getCurrentPlayer()));
       this.playerMoveScreen();
     });
     shipsDiv.append(populateBtn, doneBtn);

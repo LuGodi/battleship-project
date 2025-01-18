@@ -4,6 +4,7 @@ export default class Gameboard {
   //missed shots coordinate are not zero indexed
   missedShots = [];
   attacksReceived = [];
+  //TODO change to board instead of coordinates to avoid confusion
   coordinates;
   constructor() {
     this.coordinates = new Map();

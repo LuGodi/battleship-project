@@ -7,6 +7,8 @@ export default class Game {
   static player1;
   static player2;
   static currentPlayer;
+  static MAX_SHIPS = 5;
+  //shouldnt I manage the phases here ?
   static start() {
     //populate the gameboard with predetermined coordinates
     console.log("start game");
@@ -30,5 +32,10 @@ export default class Game {
     player.gameboard.placeShip("D", 1, 1, "vertical");
     player.gameboard.placeShip("A", 3, 4, "vertical");
     player.gameboard.placeShip("A", 8, 2, "horizontal");
+    player.gameboard.placeShip("A", 10, 2, "horizontal");
+  }
+  static isPlayerReady(player) {
+    const uniqueShipsInstances = new Set(player.gameboard.coordinates.values());
+    return uniqueShipsInstances.size === this.MAX_SHIPS;
   }
 }
