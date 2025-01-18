@@ -4,6 +4,7 @@ import Player from "./player";
 //this will serve as the mediator
 export default class Game {
   static players = [];
+  //first item will be the current player
   static player1;
   static player2;
   static currentPlayer;
@@ -12,10 +13,10 @@ export default class Game {
   static start() {
     //populate the gameboard with predetermined coordinates
     console.log("start game");
-    this.player1 = new Player("real", "p1");
-    this.player2 = new Player("real", "p2");
-    // Game.players.push(player1, player2);
-
+    // this.player1 = new Player("real", "p1");
+    // this.player2 = new Player("real", "p2");
+    Game.players.push(new Player("real", "p1"), new Player("real", "p2"));
+    [this.player1, this.player2] = this.players;
     Game.currentPlayer = this.player1;
   }
   static getCurrentPlayer() {
@@ -23,8 +24,12 @@ export default class Game {
     return Game.currentPlayer;
   }
   static switchPlayer() {
+    let oldCurrPlayer = this.currentPlayer;
     this.currentPlayer =
-      this.currentPlayer === player1 ? this.player2 : this.player1;
+      this.currentPlayer === this.player1 ? this.player2 : this.player1;
+    console.log(
+      `switched from ${oldCurrPlayer.name} to ${this.currentPlayer.name}`
+    );
   }
   static populatePredetermined(player) {
     console.log("populating player", player.name);
@@ -37,5 +42,8 @@ export default class Game {
   static isPlayerReady(player) {
     const uniqueShipsInstances = new Set(player.gameboard.coordinates.values());
     return uniqueShipsInstances.size === this.MAX_SHIPS;
+  }
+  static allPlayersReady() {
+    return this.players.every((player) => this.isPlayerReady(player) === true);
   }
 }

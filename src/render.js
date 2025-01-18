@@ -37,9 +37,16 @@ export class Render {
     );
     doneBtn.addEventListener("click", () => {
       //TODO  this logic shouldnt be here, renderer should only control the rendered elements
-      console.log(Game.getCurrentPlayer().gameboard);
-      console.log(Game.isPlayerReady(Game.getCurrentPlayer()));
-      this.playerMoveScreen();
+      if (Game.isPlayerReady(Game.getCurrentPlayer()))
+        if (Game.allPlayersReady() === true) {
+          //go to the move screen because all players are setup, should also switch players
+          console.log("both players are setup");
+          Render.switchingPlayerScreen(Render.playerMoveScreen, 3000);
+        } else {
+          //we still need p2 to setup, so lets switch the player then setup
+          console.log("still need p2 to setup, lets go");
+          Render.switchingPlayerScreen(Render.playerSetupScreen, 500);
+        }
     });
     shipsDiv.append(populateBtn, doneBtn);
 
@@ -48,11 +55,19 @@ export class Render {
       shipsDiv,
       board.getRenderedBoard()
     );
-    board.loopBoard((cell) =>
-      console.log("looping board \n", cell.dataset.coordinates)
-    );
   }
-  static switchingPlayerScreen(fromPlayer, toPlayer) {
+  static async switchingPlayerScreen(nextScreenFun, time) {
+    const switching = document.createElement("p");
+    switching.textContent = "Switching players, please hold . . . ";
+
+    Render.cachedDom.mainContainer.replaceChildren(switching);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        Game.switchPlayer();
+        nextScreenFun.call(this);
+      }, time);
+    });
+
     //set a timer to change the screen and board to the other player
   }
   static playerMoveScreen() {
