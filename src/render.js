@@ -5,6 +5,8 @@ export class Render {
     body: document.querySelector("body"),
     statusNav: document.querySelector(".header"),
     mainContainer: document.querySelector(".main-container"),
+    p1RenderedBoard: null,
+    p2RenderedBoard: null,
   };
 
   static setHeader(title) {
@@ -32,9 +34,10 @@ export class Render {
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     const doneBtn = document.createElement("button");
     doneBtn.textContent = `Done`;
-    populateBtn.addEventListener("click", () =>
-      Game.populatePredetermined(Game.getCurrentPlayer())
-    );
+    populateBtn.addEventListener("click", () => {
+      Game.populatePredetermined(Game.getCurrentPlayer());
+      board.updateBoard(Game.getCurrentPlayer().gameboard);
+    });
     doneBtn.addEventListener("click", () => {
       //TODO  this logic shouldnt be here, renderer should only control the rendered elements
       if (Game.isPlayerReady(Game.getCurrentPlayer()))
@@ -133,7 +136,19 @@ export class Board {
   getRenderedBoard() {
     return this.renderedBoard;
   }
-  updateBoard(gameboardInfo) {}
+  updateBoard(gameboardInstance) {
+    console.log(gameboardInstance.coordinates);
+    const arr = ["missedShots", "attacksReceived", "coordinates"];
+    this.loopBoard((cell) => {
+      //if gameboard coordinates matches missed shots or attacks received or coordinates
+      //change text content(img later) to match according to what it is
+      //board is updated whenever places ship
+      if (gameboardInstance.coordinates.has(cell.dataset.coordinates)) {
+        console.log("found");
+        cell.textContent = "ship";
+      }
+    });
+  }
 
   loopBoard(callback) {
     for (let cell of this.renderedBoard.children) {
