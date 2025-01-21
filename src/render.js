@@ -29,31 +29,25 @@ export class Render {
     //TODO
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
-
     const populateBtn = document.createElement("button");
-    populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     const doneBtn = document.createElement("button");
+    populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
+    const board = new Board();
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
       board.updateBoard(Game.getCurrentPlayer().gameboard);
     });
     doneBtn.addEventListener("click", () => {
       //TODO  this logic shouldnt be here, renderer should only control the rendered elements
-      if (Game.isPlayerReady(Game.getCurrentPlayer()))
-        if (Game.allPlayersReady() === true) {
-          //go to the move screen because all players are setup, should also switch players
-          console.log("both players are setup");
-          Render.switchingPlayerScreen(Render.playerMoveScreen, 3000);
-        } else {
-          //we still need p2 to setup, so lets switch the player then setup
-          console.log("still need p2 to setup, lets go");
-          Render.switchingPlayerScreen(Render.playerSetupScreen, 500);
-        }
+      //how do i know if its ready to go to the next phase?
+
+      const nextRenderPhase = Game.playerSetup();
+
+      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 5000);
     });
     shipsDiv.append(populateBtn, doneBtn);
 
-    const board = new Board();
     this.cachedDom.mainContainer.replaceChildren(
       shipsDiv,
       board.getRenderedBoard()
@@ -66,7 +60,7 @@ export class Render {
     Render.cachedDom.mainContainer.replaceChildren(switching);
     await new Promise((resolve) => {
       setTimeout(() => {
-        Game.switchPlayer();
+        // Game.switchPlayer();
         nextScreenFun.call(this);
       }, time);
     });
@@ -150,6 +144,9 @@ export class Board {
     });
   }
 
+  clickBoardEvent(event) {
+    event.dataset.coordinates;
+  }
   loopBoard(callback) {
     for (let cell of this.renderedBoard.children) {
       if (cell.dataset.isLabel === true) continue;
