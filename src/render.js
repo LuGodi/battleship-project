@@ -56,6 +56,9 @@ export class Render {
   static async switchingPlayerScreen(nextScreenFun, time) {
     const switching = document.createElement("p");
     switching.textContent = "Switching players, please hold . . . ";
+    this.cachedDom.statusNav.textContent = `Switching from ${
+      Game.getEnemyPlayer().name
+    } to ${Game.getCurrentPlayer().name}`;
 
     Render.cachedDom.mainContainer.replaceChildren(switching);
     await new Promise((resolve) => {
@@ -68,6 +71,8 @@ export class Render {
     //set a timer to change the screen and board to the other player
   }
   static playerMoveScreen() {
+    console.log("player Move Screen");
+    console.log(Game.getCurrentStage());
     this.cachedDom.mainContainer.replaceChildren();
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }

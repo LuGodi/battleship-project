@@ -34,6 +34,7 @@ export default class Game {
     this.currentStage = "playerSetup";
     if (Game.allPlayersReady() === true) {
       this.currentStage = "playerMove";
+      Game.switchPlayer();
       return this.currentStage;
     }
 
@@ -73,6 +74,9 @@ export default class Game {
   }
   static getCurrentPlayer() {
     return Game.currentPlayer;
+  }
+  static getCurrentStage() {
+    return Game.currentStage;
   }
   static switchPlayer() {
     let oldCurrPlayer = this.currentPlayer;
