@@ -25,7 +25,6 @@ export class Render {
     this.cachedDom.statusNav.textContent = "BattleShip";
   }
   static playerSetupScreen(currentPlayer) {
-    //TODO
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
     const populateBtn = document.createElement("button");
@@ -38,11 +37,10 @@ export class Render {
       board.updateBoard();
     });
     doneBtn.addEventListener("click", () => {
-      //TODO  this logic shouldnt be here, renderer should only control the rendered elements
-      //how do i know if its ready to go to the next phase?
+      //fixed
 
       const nextRenderPhase = Game.playerSetup();
-
+      Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
     shipsDiv.append(populateBtn, doneBtn);
@@ -52,7 +50,7 @@ export class Render {
       board.getRenderedBoard()
     );
   }
-  static async switchingPlayerScreen(nextScreenFun, time) {
+  static async switchingPlayerScreen(nextScreenFun, time = 500) {
     const switching = document.createElement("p");
     switching.textContent = "Switching players, please hold . . . ";
     this.cachedDom.statusNav.textContent = `Switching from ${
@@ -84,6 +82,20 @@ export class Render {
       enemyPlayerRenderedBoard.getRenderedBoard()
     );
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
+    //REFACTOR change to handleEvent on the board
+    enemyPlayerRenderedBoard.getRenderedBoard().addEventListener(
+      "click",
+      (e) => {
+        //FIXED, row is getting the wrong info
+        const attackCoordinates = enemyPlayerRenderedBoard.clickBoardEvent(e);
+        const nextRenderPhase = Game.playerMove(attackCoordinates);
+        enemyPlayerRenderedBoard.updateBoard();
+        //CHANGE switchingPlayerScreen so i dont have to call Render[nextrentedphar + "screen"] on each new call
+        Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+      },
+      { once: true }
+    );
+    //TODO implement gameover check
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static GameoverScreen() {}
@@ -199,7 +211,8 @@ export class Board {
 
   clickBoardEvent(event) {
     if (this.player === Game.getEnemyPlayer()) {
-      console.log(event.target.dataset.coordinates);
+      // console.log(event.target.dataset.coordinates);
+      return event.target.dataset.coordinates;
     }
   }
   loopBoard(callback) {

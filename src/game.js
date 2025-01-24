@@ -50,16 +50,20 @@ export default class Game {
       return this.currentStage;
     }
   }
-  static playerMove(attackCoordinates) {
-    const [column, row] = attackCoordinates;
+  static playerMove(attackCoordinates, waitTime = 0) {
+    const [column, row] = [
+      attackCoordinates[0],
+      attackCoordinates.substring(1),
+    ];
     this.currentStage = "playerMove";
-
-    enemyPlayer.gameboard.receiveAttack(attack);
+    const enemyPlayer = this.getEnemyPlayer();
+    const hit = enemyPlayer.gameboard.receiveAttack(column, row);
     console.log(
-      `${enemyPlayer.gameboard} attack received at ${attackCoordinates}`
+      `${enemyPlayer.gameboard} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
     );
     //insert gameovercheck
     Game.switchPlayer();
+    return this.currentStage;
   }
   static isGameover() {
     const enemyPlayer = Game.getEnemyPlayer();
