@@ -5,8 +5,7 @@ export class Render {
     body: document.querySelector("body"),
     statusNav: document.querySelector(".header"),
     mainContainer: document.querySelector(".main-container"),
-    p1RenderedBoard: null,
-    p2RenderedBoard: null,
+    renderedBoards: [],
   };
 
   static setHeader(title) {
@@ -33,10 +32,10 @@ export class Render {
     const doneBtn = document.createElement("button");
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
-    const board = new Board();
+    const board = new Board(Game.getCurrentPlayer());
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
-      board.updateBoard(Game.getCurrentPlayer().gameboard);
+      board.updateBoard();
     });
     doneBtn.addEventListener("click", () => {
       //TODO  this logic shouldnt be here, renderer should only control the rendered elements
@@ -44,7 +43,7 @@ export class Render {
 
       const nextRenderPhase = Game.playerSetup();
 
-      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 5000);
+      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
     shipsDiv.append(populateBtn, doneBtn);
 
@@ -71,9 +70,20 @@ export class Render {
     //set a timer to change the screen and board to the other player
   }
   static playerMoveScreen() {
+    //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
-    this.cachedDom.mainContainer.replaceChildren();
+    //REFACTOR stop making new boards
+    const currentPlayerRenderedBoard = new Board(Game.getCurrentPlayer());
+    const enemyPlayerRenderedBoard = new Board(Game.getEnemyPlayer());
+    currentPlayerRenderedBoard.updateBoard();
+    enemyPlayerRenderedBoard.updateBoard();
+    const boardContainers = renderUtil.makeElement("div", "board-containers");
+    boardContainers.replaceChildren(
+      currentPlayerRenderedBoard.getRenderedBoard(),
+      enemyPlayerRenderedBoard.getRenderedBoard()
+    );
+    this.cachedDom.mainContainer.replaceChildren(boardContainers);
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static GameoverScreen() {}
@@ -93,11 +103,13 @@ export class Board {
   columns;
   className;
   renderedBoard;
-  constructor(rows = 10, columns = 10, className = "board-container") {
+  player;
+  constructor(player, rows = 10, columns = 10, className = "board-container") {
     this.rows = rows;
     this.columns = columns;
     this.className = className;
     this.init(rows, columns, className);
+    this.player = player;
   }
   init() {
     const rows = this.rows;
@@ -126,6 +138,8 @@ export class Board {
     }
 
     const boardContainer = document.createElement("div");
+    // const boundEvent = this.clickBoardEvent.bind(this);
+    // boardContainer.addEventListener("click", boundEvent);
     boardContainer.append(...cells);
     boardContainer.classList.add(className);
     this.renderedBoard = boardContainer;
@@ -135,22 +149,58 @@ export class Board {
   getRenderedBoard() {
     return this.renderedBoard;
   }
-  updateBoard(gameboardInstance) {
-    console.log(gameboardInstance.coordinates);
-    const arr = ["missedShots", "attacksReceived", "coordinates"];
+  updateBoard() {
+    if (Game.getCurrentPlayer() === this.player)
+      //need to see my ships and enemy players hits
+      //I am the current player
+      this.allyView();
+    else {
+      //if im the enemy player, the current player needs to see
+      //my attacks received, missed hits
+      this.enemyView();
+    }
+  }
+  //REFACTOR
+  enemyView(gameboardInstance) {
+    const missedHits = this.player.gameboard.missedShots;
+    const attacksReceived = this.player.gameboard.attacksReceived;
+
+    this.loopBoard((cell) => {
+      if (missedHits.includes(cell.dataset.coordinates)) {
+        cell.textContent = "miss";
+      } else if (attacksReceived.includes(cell.dataset.coordinates)) {
+        cell.textContent = "hit";
+      }
+    });
+  }
+  allyView(gameboardInstance) {
+    //!!
     this.loopBoard((cell) => {
       //if gameboard coordinates matches missed shots or attacks received or coordinates
       //change text content(img later) to match according to what it is
       //board is updated whenever places ship
-      if (gameboardInstance.coordinates.has(cell.dataset.coordinates)) {
+      //REFACTOR
+      if (this.player.gameboard.coordinates.has(cell.dataset.coordinates)) {
         console.log("found");
         cell.textContent = "ship";
+      }
+      if (
+        this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
+      ) {
+        cell.textContent = "hit";
+      }
+      if (
+        this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
+      ) {
+        cell.textContent = "miss";
       }
     });
   }
 
   clickBoardEvent(event) {
-    event.dataset.coordinates;
+    if (this.player === Game.getEnemyPlayer()) {
+      console.log(event.target.dataset.coordinates);
+    }
   }
   loopBoard(callback) {
     for (let cell of this.renderedBoard.children) {
