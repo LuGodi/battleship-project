@@ -88,6 +88,9 @@ export class Render {
     // const enemyPlayerRenderedBoard = new Board(Game.getEnemyPlayer());
     // player1Board.updateBoard();
     // player2Board.updateBoard();
+
+    //Refactor: Change this to a function that handles rendering the board altogether so I can reuse it on gameover scene
+    //I can also just cache this screen and reuse it
     const boardContainers = renderUtil.makeElement("div", "board-containers");
     const board1HeaderInfo = renderUtil.makeElement(
       "span",
@@ -123,7 +126,17 @@ export class Render {
     //TODO implement gameover check
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
-  static GameoverScreen() {}
+  static gameOverScreen() {
+    const [player1Board, player2Board] = this.cachedDom.domBoards;
+    player1Board.revealBoard();
+    player2Board.revealBoard();
+
+    Render.cachedDom.mainContainer.replaceChildren(
+      player1Board.getRenderedBoard(),
+      player2Board.getRenderedBoard()
+    );
+    Render.setHeader(`${Game.getWinner().name} is the winner`);
+  }
 }
 //TODO change to upperCase
 class renderUtil {
@@ -149,8 +162,8 @@ export class Board {
     this.rows = rows;
     this.columns = columns;
     this.className = className;
-    this.init(rows, columns, className);
     this.player = player;
+    this.init(rows, columns, className);
   }
   init() {
     const rows = this.rows;
@@ -179,7 +192,6 @@ export class Board {
     }
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
-
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
 
@@ -206,6 +218,9 @@ export class Board {
       console.log(`${this.player.name} is active player`);
       this.allyView();
     }
+  }
+  revealBoard() {
+    this.allyView();
   }
   //REFACTOR
   enemyView(gameboardInstance) {

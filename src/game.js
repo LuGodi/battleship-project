@@ -5,6 +5,7 @@ import Player from "./player";
 export default class Game {
   static players = [];
   static stages = ["start", "playerSetup", "playerMove", "gameOver"];
+  static gameover = false;
 
   //first item will be the current player
   static player1;
@@ -65,14 +66,28 @@ export default class Game {
     );
     if (this.isGameover()) {
       this.currentStage = "gameOver";
+      return this.currentStage;
     }
     //insert gameovercheck
     Game.switchPlayer();
     return this.currentStage;
   }
+  //not pure
   static isGameover() {
-    const enemyPlayer = Game.getEnemyPlayer();
-    return enemyPlayer.gameboard.allSunk();
+    //TODO im checking only for the enemy player, should I check for all just to make sure?
+    this.gameover = this.players.some(
+      (player) => player.gameboard.allSunk() === true
+    );
+    return this.gameover;
+    // const enemyPlayer = Game.getEnemyPlayer();
+    // return enemyPlayer.gameboard.allSunk();
+  }
+  static getWinner() {
+    if (this.gameover === false) return;
+    const [winner] = this.players.filter(
+      (player) => player.gameboard.allSunk() === false
+    );
+    return winner;
   }
   static getEnemyPlayer() {
     const [enemyPlayer] = this.players.filter(
