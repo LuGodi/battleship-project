@@ -206,19 +206,22 @@ export class Board {
       //change text content(img later) to match according to what it is
       //board is updated whenever places ship
       //REFACTOR
-      if (this.player.gameboard.coordinates.has(cell.dataset.coordinates)) {
-        console.log("found");
-        cell.textContent = "ship";
-      }
+      //TODO separate the stylying for each cell status
       if (
         this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
       ) {
         cell.textContent = "hit";
-      }
-      if (
+      } else if (
         this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
       ) {
         cell.textContent = "miss";
+      } else if (
+        this.player.gameboard.coordinates.has(cell.dataset.coordinates)
+      ) {
+        console.log("found");
+        cell.textContent = "ship";
+      } else {
+        cell.textContent = "";
       }
     });
   }
