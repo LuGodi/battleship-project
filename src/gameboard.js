@@ -15,6 +15,7 @@ export default class Gameboard {
     this.missedShots = this.#clear(this.missedShots);
     this.attacksReceived = this.#clear(this.attacksReceived);
   }
+  //violating open/closed principle, but the other options take a long time to implement, is not time effective
   #clear(value) {
     let returnVal;
     switch (value.constructor.name) {

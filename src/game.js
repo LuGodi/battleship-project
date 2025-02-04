@@ -50,6 +50,8 @@ export default class Game {
       return this.currentStage;
     }
   }
+
+  //I should decide if it gets column,row or coordinates
   static playerMove(attackCoordinates, waitTime = 0) {
     const [column, row] = [
       attackCoordinates[0],
@@ -71,7 +73,7 @@ export default class Game {
   }
   static getEnemyPlayer() {
     const [enemyPlayer] = this.players.filter(
-      (element) => element !== Game.currentPlayer
+      (element) => element !== Game.getCurrentPlayer()
     );
 
     return enemyPlayer;

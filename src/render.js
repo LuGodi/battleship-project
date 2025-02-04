@@ -5,7 +5,7 @@ export class Render {
     body: document.querySelector("body"),
     statusNav: document.querySelector(".header"),
     mainContainer: document.querySelector(".main-container"),
-    renderedBoards: [],
+    domBoards: [],
   };
 
   static setHeader(title) {
@@ -24,6 +24,10 @@ export class Render {
     Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
     this.cachedDom.statusNav.textContent = "BattleShip";
   }
+  static updateCachedBoards() {
+    this.cachedDom.domBoards.forEach((element) => element.updateBoard());
+    return this.cachedDom.domBoards;
+  }
   static playerSetupScreen(currentPlayer) {
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
@@ -32,6 +36,7 @@ export class Render {
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
     const board = new Board(Game.getCurrentPlayer());
+    this.cachedDom.domBoards.push(board);
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
       board.updateBoard();
@@ -40,7 +45,7 @@ export class Render {
       //fixed
 
       const nextRenderPhase = Game.playerSetup();
-      Render.cachedDom.renderedBoards.push(board);
+      // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
     shipsDiv.append(populateBtn, doneBtn);
@@ -67,34 +72,33 @@ export class Render {
 
     //set a timer to change the screen and board to the other player
   }
+
+  //REFACTOR clean up this is messy
   static playerMoveScreen() {
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
+
     //REFACTOR stop making new boards
-    const currentPlayerRenderedBoard = new Board(Game.getCurrentPlayer());
-    const enemyPlayerRenderedBoard = new Board(Game.getEnemyPlayer());
-    currentPlayerRenderedBoard.updateBoard();
-    enemyPlayerRenderedBoard.updateBoard();
+    //TODO make board in the same position so theres no changing around each round
+    const [player1Board, player2Board] = this.updateCachedBoards();
+    // const currentPlayerRenderedBoard = new Board(Game.getCurrentPlayer());
+    // const enemyPlayerRenderedBoard = new Board(Game.getEnemyPlayer());
+    // player1Board.updateBoard();
+    // player2Board.updateBoard();
     const boardContainers = renderUtil.makeElement("div", "board-containers");
     boardContainers.replaceChildren(
-      currentPlayerRenderedBoard.getRenderedBoard(),
-      enemyPlayerRenderedBoard.getRenderedBoard()
+      player1Board.getRenderedBoard(),
+      player2Board.getRenderedBoard()
     );
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
     //REFACTOR change to handleEvent on the board
-    enemyPlayerRenderedBoard.getRenderedBoard().addEventListener(
-      "click",
-      (e) => {
-        //FIXED, row is getting the wrong info
-        const attackCoordinates = enemyPlayerRenderedBoard.clickBoardEvent(e);
-        const nextRenderPhase = Game.playerMove(attackCoordinates);
-        enemyPlayerRenderedBoard.updateBoard();
-        //CHANGE switchingPlayerScreen so i dont have to call Render[nextrentedphar + "screen"] on each new call
-        Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
-      },
-      { once: true }
+    const [enemyBoard] = this.cachedDom.domBoards.filter(
+      (board) => board.amIEnemy() === true
     );
+    enemyBoard
+      .getRenderedBoard()
+      .addEventListener("click", enemyBoard, { once: true });
     //TODO implement gameover check
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
@@ -161,19 +165,26 @@ export class Board {
   getRenderedBoard() {
     return this.renderedBoard;
   }
+  amIEnemy() {
+    return Game.getEnemyPlayer() === this.player;
+  }
   updateBoard() {
-    if (Game.getCurrentPlayer() === this.player)
+    if (this.amIEnemy() === true) {
       //need to see my ships and enemy players hits
       //I am the current player
-      this.allyView();
-    else {
+      console.log(`${this.player.name} is enemy`);
+      this.enemyView();
+      return;
+    } else {
       //if im the enemy player, the current player needs to see
       //my attacks received, missed hits
-      this.enemyView();
+      console.log(`${this.player.name} is active player`);
+      this.allyView();
     }
   }
   //REFACTOR
   enemyView(gameboardInstance) {
+    this.renderedBoard.dataset.playerStatus = "enemy";
     const missedHits = this.player.gameboard.missedShots;
     const attacksReceived = this.player.gameboard.attacksReceived;
 
@@ -182,11 +193,14 @@ export class Board {
         cell.textContent = "miss";
       } else if (attacksReceived.includes(cell.dataset.coordinates)) {
         cell.textContent = "hit";
+      } else {
+        cell.textContent = "";
       }
     });
   }
   allyView(gameboardInstance) {
     //!!
+    this.renderedBoard.dataset.playerStatus = "ally";
     this.loopBoard((cell) => {
       //if gameboard coordinates matches missed shots or attacks received or coordinates
       //change text content(img later) to match according to what it is
@@ -210,7 +224,7 @@ export class Board {
   }
 
   clickBoardEvent(event) {
-    if (this.player === Game.getEnemyPlayer()) {
+    if (this.amIEnemy() === true) {
       // console.log(event.target.dataset.coordinates);
       return event.target.dataset.coordinates;
     }
@@ -219,6 +233,15 @@ export class Board {
     for (let cell of this.renderedBoard.children) {
       if (cell.dataset.isLabel === true) continue;
       callback(cell);
+    }
+  }
+  handleEvent(event) {
+    if (event.type !== "click") return;
+    if (Game.getCurrentStage() === "playerMove") {
+      const attackCoordinates = this.clickBoardEvent(event);
+      const nextRenderPhase = Game.playerMove(attackCoordinates);
+      this.updateBoard();
+      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
     }
   }
 }
