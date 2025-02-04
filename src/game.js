@@ -63,6 +63,9 @@ export default class Game {
     console.log(
       `${enemyPlayer.gameboard} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
     );
+    if (this.isGameover()) {
+      this.currentStage = "gameOver";
+    }
     //insert gameovercheck
     Game.switchPlayer();
     return this.currentStage;
