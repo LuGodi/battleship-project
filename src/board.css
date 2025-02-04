@@ -3,6 +3,11 @@
   --columns: 10;
 }
 
+.board-containers {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
 .board-container {
   background-color: rgb(189, 207, 252);
   height: 500px;

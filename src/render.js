@@ -55,6 +55,8 @@ export class Render {
       board.getRenderedBoard()
     );
   }
+
+  //should I place update board here on the switching playerScreen  ?
   static async switchingPlayerScreen(nextScreenFun, time = 500) {
     const switching = document.createElement("p");
     switching.textContent = "Switching players, please hold . . . ";
@@ -87,10 +89,29 @@ export class Render {
     // player1Board.updateBoard();
     // player2Board.updateBoard();
     const boardContainers = renderUtil.makeElement("div", "board-containers");
-    boardContainers.replaceChildren(
-      player1Board.getRenderedBoard(),
+    const board1HeaderInfo = renderUtil.makeElement(
+      "span",
+      "board-header-info"
+    );
+    const board2HeaderInfo = renderUtil.makeElement(
+      "span",
+      "board-header-info"
+    );
+    board1HeaderInfo.textContent = player1Board.player.name;
+    board2HeaderInfo.textContent = player2Board.player.name;
+    const board1InfoEl = renderUtil.makeElement(
+      "div",
+      "board-information",
+      board1HeaderInfo,
+      player1Board.getRenderedBoard()
+    );
+    const board2InfoEl = renderUtil.makeElement(
+      "div",
+      "board-information",
+      board2HeaderInfo,
       player2Board.getRenderedBoard()
     );
+    boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
     //REFACTOR change to handleEvent on the board
     const [enemyBoard] = this.cachedDom.domBoards.filter(
@@ -104,10 +125,14 @@ export class Render {
   }
   static GameoverScreen() {}
 }
+//TODO change to upperCase
 class renderUtil {
-  static makeElement(element, className) {
+  static makeElement(element, className, ...childs) {
     const myEl = document.createElement(element);
     myEl.classList.add(className);
+    if (childs) {
+      myEl.append(...childs);
+    }
     return myEl;
   }
 }
@@ -153,11 +178,11 @@ export class Board {
       }
     }
 
-    const boardContainer = document.createElement("div");
+    const boardContainer = renderUtil.makeElement("div", className, ...cells);
+
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
-    boardContainer.append(...cells);
-    boardContainer.classList.add(className);
+
     this.renderedBoard = boardContainer;
     console.log(this.renderedBoard);
     // return boardContainer;
