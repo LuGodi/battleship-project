@@ -81,40 +81,16 @@ export class Render {
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
 
-    //REFACTOR stop making new boards
-    //TODO make board in the same position so theres no changing around each round
+    //DONE stop making new boards
+    //DONE make board in the same position so theres no changing around each round
     const [player1Board, player2Board] = this.updateCachedBoards();
-    // const currentPlayerRenderedBoard = new Board(Game.getCurrentPlayer());
-    // const enemyPlayerRenderedBoard = new Board(Game.getEnemyPlayer());
-    // player1Board.updateBoard();
-    // player2Board.updateBoard();
 
     //Refactor: Change this to a function that handles rendering the board altogether so I can reuse it on gameover scene
     //I can also just cache this screen and reuse it
-    const boardContainers = renderUtil.makeElement("div", "board-containers");
-    const board1HeaderInfo = renderUtil.makeElement(
-      "span",
-      "board-header-info"
+    const boardContainers = renderUtil.makeBoardContainers(
+      player1Board,
+      player2Board
     );
-    const board2HeaderInfo = renderUtil.makeElement(
-      "span",
-      "board-header-info"
-    );
-    board1HeaderInfo.textContent = player1Board.player.name;
-    board2HeaderInfo.textContent = player2Board.player.name;
-    const board1InfoEl = renderUtil.makeElement(
-      "div",
-      "board-information",
-      board1HeaderInfo,
-      player1Board.getRenderedBoard()
-    );
-    const board2InfoEl = renderUtil.makeElement(
-      "div",
-      "board-information",
-      board2HeaderInfo,
-      player2Board.getRenderedBoard()
-    );
-    boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
     //REFACTOR change to handleEvent on the board
     const [enemyBoard] = this.cachedDom.domBoards.filter(
@@ -147,6 +123,34 @@ class renderUtil {
       myEl.append(...childs);
     }
     return myEl;
+  }
+  //todo
+  static makeBoardContainers(player1Board, player2Board) {
+    const boardContainers = renderUtil.makeElement("div", "board-containers");
+    const board1HeaderInfo = renderUtil.makeElement(
+      "span",
+      "board-header-info"
+    );
+    const board2HeaderInfo = renderUtil.makeElement(
+      "span",
+      "board-header-info"
+    );
+    board1HeaderInfo.textContent = player1Board.player.name;
+    board2HeaderInfo.textContent = player2Board.player.name;
+    const board1InfoEl = renderUtil.makeElement(
+      "div",
+      "board-information",
+      board1HeaderInfo,
+      player1Board.getRenderedBoard()
+    );
+    const board2InfoEl = renderUtil.makeElement(
+      "div",
+      "board-information",
+      board2HeaderInfo,
+      player2Board.getRenderedBoard()
+    );
+    boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
+    return boardContainers;
   }
 }
 // export class UI(){
@@ -192,6 +196,8 @@ export class Board {
     }
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
+    //this is breaking
+    boardContainer.dataset.player = this.player.name;
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
 
