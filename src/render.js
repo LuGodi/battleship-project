@@ -15,6 +15,7 @@ export class Render {
 
   static gameStartScreen() {
     //TODO memoize
+    console.log("game start screen");
     const gameStartBtn = document.createElement("button");
     gameStartBtn.textContent = "Start";
     gameStartBtn.addEventListener("click", (event) => {
@@ -197,6 +198,9 @@ export class Board {
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
     //this is breaking
+    //player undefined
+    console.log(this);
+    console.log(this.player.name);
     boardContainer.dataset.player = this.player.name;
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
