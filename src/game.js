@@ -72,6 +72,28 @@ export default class Game {
     Game.switchPlayer();
     return this.currentStage;
   }
+  static computerPlayerMove() {
+    const coordinates = Game.getRandomCoordinate();
+    try {
+      let nextStage = Game.playerMove(coordinates);
+    } catch (error) {
+      throw error;
+    }
+    return nextStage;
+  }
+  //should I move this to gameboard ?
+  static getRandomCoordinate() {
+    const COLUMNS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    const MINCOORDINATE = 1;
+    const MAXCOORDINATE = 10;
+    const randomRow = Math.floor(
+      Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1)
+    );
+    const randomCol =
+      COLUMNS[Math.floor(Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1))];
+
+    return randomCol.concat(randomRow);
+  }
   //not pure
   static isGameover() {
     //TODO im checking only for the enemy player, should I check for all just to make sure?
