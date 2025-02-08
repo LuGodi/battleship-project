@@ -20,7 +20,7 @@ export default class Game {
     this.currentStage = "start";
     // this.player1 = new Player("real", "p1");
     // this.player2 = new Player("real", "p2");
-    Game.players.push(new Player("real", "p1"), new Player("real", "p2"));
+    Game.players.push(new Player("real", "p1"), new Player("computer", "p2"));
     [this.player1, this.player2] = this.players;
     Game.currentPlayer = this.player1;
   }
@@ -62,7 +62,7 @@ export default class Game {
     const enemyPlayer = this.getEnemyPlayer();
     const hit = enemyPlayer.gameboard.receiveAttack(column, row);
     console.log(
-      `${enemyPlayer.gameboard} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
+      `${enemyPlayer.name} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
     );
     if (this.isGameover()) {
       this.currentStage = "gameOver";
@@ -73,24 +73,33 @@ export default class Game {
     return this.currentStage;
   }
   static computerPlayerMove() {
-    const coordinates = Game.getRandomCoordinate();
-    try {
-      let nextStage = Game.playerMove(coordinates);
-    } catch (error) {
-      throw error;
+    const coordinates = Game.generateRandomCoordinate();
+    let nextStage;
+    while (true) {
+      try {
+        return Game.playerMove(coordinates);
+      } catch (error) {
+        console.error(`tried at ${coordinates}, regenerating`);
+        if (error.message.includes("coordinate has already been hit") === false)
+          throw error;
+      }
     }
-    return nextStage;
   }
   //should I move this to gameboard ?
-  static getRandomCoordinate() {
+  static generateRandomCoordinate() {
     const COLUMNS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     const MINCOORDINATE = 1;
     const MAXCOORDINATE = 10;
     const randomRow = Math.floor(
-      Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1)
+      Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1) + MINCOORDINATE
     );
+    //-1 at the end because arrays are zero indexed
     const randomCol =
-      COLUMNS[Math.floor(Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1))];
+      COLUMNS[
+        Math.floor(
+          Math.random() * (MAXCOORDINATE - MINCOORDINATE + 1) + MINCOORDINATE
+        ) - 1
+      ];
 
     return randomCol.concat(randomRow);
   }
