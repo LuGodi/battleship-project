@@ -73,10 +73,11 @@ export default class Game {
     return this.currentStage;
   }
   static computerPlayerMove() {
-    const coordinates = Game.generateRandomCoordinate();
     let nextStage;
+    let coordinates;
     while (true) {
       try {
+        coordinates = Game.generateRandomCoordinate();
         return Game.playerMove(coordinates);
       } catch (error) {
         console.error(`tried at ${coordinates}, regenerating`);
