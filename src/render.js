@@ -81,7 +81,10 @@ export class Render {
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
-
+    if (Game.currentPlayer.type === "computer") {
+      const nextRenderPhase = Game.computerPlayerMove();
+      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);
+    }
     //DONE stop making new boards
     //DONE make board in the same position so theres no changing around each round
     const [player1Board, player2Board] = this.updateCachedBoards();
