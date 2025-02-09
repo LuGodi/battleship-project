@@ -2,7 +2,7 @@ console.log("hi");
 
 import Game from "./game.js";
 import "./style.css";
-import { Board, Render } from "./render.js";
+import { BoardRenderer, Render } from "./render.js";
 
 const mainContainer = document.querySelector("body");
 

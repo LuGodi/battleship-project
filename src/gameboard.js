@@ -40,7 +40,7 @@ export default class Gameboard {
   }
   getCoordinate(column, row) {
     if (this.#isCoordinateValid(column, row) === false)
-      throw new Error("Invalid coordinate");
+      throw new Error(`Invalid coordinate at ${(column, row)}`);
     const coordinate = this.#toBoardCoordinates(column, row);
     return this.coordinates.get(coordinate);
   }
@@ -133,6 +133,8 @@ export default class Gameboard {
       return ship.isSunk() === true;
     });
   }
+  //TODO: How do I write a test for this?
+  static getRandomCoordinate() {}
   //not pure
   #recordMiss(column, row) {
     const copyMissedShots = [...this.missedShots];

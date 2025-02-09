@@ -36,7 +36,7 @@ export class Render {
     const doneBtn = document.createElement("button");
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
-    const board = new Board(Game.getCurrentPlayer());
+    const board = new BoardRenderer(Game.getCurrentPlayer());
     this.cachedDom.domBoards.push(board);
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
@@ -100,9 +100,9 @@ export class Render {
     const [enemyBoard] = this.cachedDom.domBoards.filter(
       (board) => board.amIEnemy() === true
     );
-    enemyBoard
-      .getRenderedBoard()
-      .addEventListener("click", enemyBoard, { once: true });
+    // enemyBoard
+    //   .getRenderedBoard()
+    //   .addEventListener("click", enemyBoard, { once: true });
     //TODO implement gameover check
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
@@ -160,7 +160,7 @@ class renderUtil {
 // export class UI(){
 
 // }
-export class Board {
+export class BoardRenderer {
   rows;
   columns;
   className;
@@ -200,11 +200,8 @@ export class Board {
     }
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
-    //this is breaking
-    //player undefined
-    console.log(this);
-    console.log(this.player.name);
     boardContainer.dataset.player = this.player.name;
+    boardContainer.addEventListener("click", this);
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
 
@@ -214,6 +211,9 @@ export class Board {
   }
   getRenderedBoard() {
     return this.renderedBoard;
+  }
+  initListener() {
+    this.getRenderedBoard().addEventListener("click", this);
   }
   amIEnemy() {
     return Game.getEnemyPlayer() === this.player;
@@ -292,8 +292,10 @@ export class Board {
     }
   }
   handleEvent(event) {
+    console.log(this);
     if (event.type !== "click") return;
-    if (Game.getCurrentStage() === "playerMove") {
+    if (event.target.dataset.coordinates === undefined) return;
+    if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
       this.updateBoard();
