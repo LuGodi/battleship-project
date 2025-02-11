@@ -12,7 +12,7 @@ export default class Game {
   static player2;
   static currentPlayer;
   static currentStage;
-  static MAX_SHIPS = SHIPS_TYPES.length;
+
   static SHIPS_TYPES = [
     { name: "Carrier", length: 5 },
     { name: "Battleship", length: 4 },
@@ -20,6 +20,7 @@ export default class Game {
     { name: "Submarine", length: 3 },
     { name: "Patrol Boat", length: 2 },
   ];
+  static MAX_SHIPS = this.SHIPS_TYPES.length;
   //shouldnt I manage the phases here ?
   static start() {
     //populate the gameboard with predetermined coordinates

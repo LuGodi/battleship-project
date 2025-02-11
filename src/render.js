@@ -33,12 +33,14 @@ export class Render {
   static playerSetupScreen(currentPlayer) {
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
+    const shipsMenuEl = renderUtil.makeShipsMenu(Game.SHIPS_TYPES);
     const populateBtn = document.createElement("button");
     const doneBtn = document.createElement("button");
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
     const board = new BoardRenderer(Game.getCurrentPlayer());
     this.cachedDom.domBoards.push(board);
+
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
       board.updateBoard();
@@ -50,7 +52,7 @@ export class Render {
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
-    shipsDiv.append(populateBtn, doneBtn);
+    shipsDiv.append(shipsMenuEl, populateBtn, doneBtn);
 
     this.cachedDom.mainContainer.replaceChildren(
       shipsDiv,
@@ -156,6 +158,29 @@ export class renderUtil {
     );
     boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
     return boardContainers;
+  }
+  static makeShipsMenu(SHIPS_TYPES) {
+    const menuElements = [];
+    for (let { name, length } of SHIPS_TYPES) {
+      const shipViewEl = this.makeElement("div", "ship-view");
+      //TODO finish draggable implementation
+      shipViewEl.draggable = true;
+      const shipName = this.makeElement("p", "ship-name");
+      const shipLength = this.makeElement("p", "ship-length");
+      shipName.textContent = name;
+      shipLength.textContent = length;
+      const shipInfoEl = this.makeElement(
+        "div",
+        "ship-info",
+        shipName,
+        shipLength
+      );
+      menuElements.push(
+        this.makeElement("div", "ship-info-container", shipViewEl, shipInfoEl)
+      );
+    }
+    const shipsMenuEl = this.makeElement("div", "ships-menu", ...menuElements);
+    return shipsMenuEl;
   }
 }
 // export class UI(){

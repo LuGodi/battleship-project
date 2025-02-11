@@ -24,12 +24,60 @@ body {
 .main-container {
   grid-area: main;
   display: flex;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   align-items: center;
   justify-content: center;
 }
 
 .ship-placement-container {
-  margin-right: auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.ship-placement-container::before {
+  content: "Ships";
+  display: inline-block;
+  position: absolute;
+  font-size: 30px;
+  top: -10px;
+  margin-left: 20px;
+}
+
+.ships-menu {
+  display: flex;
+
+  flex-direction: column;
+  row-gap: 50px;
+}
+.ships-menu > * {
+  border: 1px solid blue;
+  min-width: 40%;
+}
+.ship-view {
+  width: 50px;
+  height: 50px;
+  display: block;
+  background-color: lightgreen;
+}
+.ship-info-container {
+  display: flex;
+  flex-direction: row;
+}
+.ship-info {
+  margin-left: auto;
+  padding: 5px;
+}
+.ship-info .ship-name::before {
+  content: "Name: ";
+  display: inline-block;
+  width: 50px;
+  margin-right: 10px;
+}
+.ship-info .ship-length::before {
+  content: "Size: ";
+  display: inline-block;
+  width: 50px;
+  margin-right: 10px;
 }
