@@ -21,7 +21,7 @@ export class Render {
     gameStartBtn.textContent = "Start";
     gameStartBtn.addEventListener("click", (event) => {
       const nextRenderPhase = Game.start();
-      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+      Render.nextScreen(Render[nextRenderPhase + "Screen"]);
     });
     Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
     this.cachedDom.statusNav.textContent = "BattleShip";
@@ -66,6 +66,14 @@ export class Render {
   }
 
   //should I place update board here on the switching playerScreen  ?
+  static async nextScreen(nextScreenFun, time = 0) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Game.switchPlayer();
+        nextScreenFun.call(this);
+      }, time);
+    });
+  }
   static async switchingPlayerScreen(nextScreenFun, time = 500) {
     const switching = document.createElement("p");
     switching.textContent = "Switching players, please hold . . . ";
@@ -74,12 +82,8 @@ export class Render {
     } to ${Game.getCurrentPlayer().name}`;
 
     Render.cachedDom.mainContainer.replaceChildren(switching);
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        // Game.switchPlayer();
-        nextScreenFun.call(this);
-      }, time);
-    });
+
+    await Render.nextScreen(nextScreenFun, time);
 
     //set a timer to change the screen and board to the other player
   }
