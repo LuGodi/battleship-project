@@ -152,4 +152,21 @@ export class BoardRenderer {
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
     }
   }
+
+  handleDropEvent(event) {
+    //TODO can I put the remove event listener here ?
+    console.log("handledropevent");
+    console.log(Game.getCurrentStage());
+
+    if (Game.getCurrentStage() !== "playerSetup") return;
+    event.preventDefault();
+    console.log(`this : ${this}`);
+    const [col, row] = [
+      this.target.dataset.coordinates[0],
+      attackCoordinates.substring(1),
+    ];
+    const len = event.dataTransfer.getData("length");
+    console.log(len);
+    this.player.gameboard.placeShip(col, row, len);
+  }
 }

@@ -26,11 +26,13 @@ export default class Game {
     //populate the gameboard with predetermined coordinates
     console.log("start game");
     this.currentStage = "start";
-    // this.player1 = new Player("real", "p1");
-    // this.player2 = new Player("real", "p2");
+
     Game.players.push(new Player("real", "p1"), new Player("computer", "p2"));
     [this.player1, this.player2] = this.players;
     Game.currentPlayer = this.player1;
+    const nextStage = "playerSetup";
+
+    return (this.currentStage = nextStage);
   }
 
   //stages''

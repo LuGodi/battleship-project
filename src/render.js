@@ -20,8 +20,8 @@ export class Render {
     const gameStartBtn = document.createElement("button");
     gameStartBtn.textContent = "Start";
     gameStartBtn.addEventListener("click", (event) => {
-      Game.start();
-      this.playerSetupScreen();
+      const nextRenderPhase = Game.start();
+      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
     });
     Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
     this.cachedDom.statusNav.textContent = "BattleShip";
@@ -30,6 +30,7 @@ export class Render {
     this.cachedDom.domBoards.forEach((element) => element.updateBoard());
     return this.cachedDom.domBoards;
   }
+  //BUG: stage isnt changing to playerSetup
   static playerSetupScreen(currentPlayer) {
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
@@ -52,8 +53,12 @@ export class Render {
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
-    shipsDiv.append(shipsMenuEl, populateBtn, doneBtn);
 
+    shipsDiv.append(shipsMenuEl, populateBtn, doneBtn);
+    board.getRenderedBoard().addEventListener("drop", board.handleDropEvent);
+    board.getRenderedBoard().addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
     this.cachedDom.mainContainer.replaceChildren(
       shipsDiv,
       board.getRenderedBoard()
@@ -165,6 +170,15 @@ export class renderUtil {
       const shipViewEl = this.makeElement("div", "ship-view");
       //TODO finish draggable implementation
       shipViewEl.draggable = true;
+      function dragStartEvent(event) {
+        event.dataTransfer.setData("length", length);
+        console.log("dragstart");
+      }
+      shipViewEl.addEventListener("dragstart", dragStartEvent);
+      // shipViewEl.addEventListener("dragend", (event) => {
+      //   const data = event.dataTransfer.getData("text");
+      //   console.log(data);
+      // });
       const shipName = this.makeElement("p", "ship-name");
       const shipLength = this.makeElement("p", "ship-length");
       shipName.textContent = name;
