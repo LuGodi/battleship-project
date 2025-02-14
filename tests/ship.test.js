@@ -21,6 +21,12 @@ describe("ship", () => {
       }
       expect(myShip.isSunk()).toBe(true);
     });
+    test("should have a direction property", () => {
+      myShip.setDirection("vertical");
+      expect(myShip.getDirection()).toBe("vertical");
+      myShip.setDirection("horizontal");
+      expect(myShip.getDirection()).toBe("horizontal");
+    });
     test.todo("should be sealed");
   });
   test("should throw error if length is not provided", () => {

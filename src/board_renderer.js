@@ -180,5 +180,10 @@ export class BoardRenderer {
     //FIX: if ship was already placed, position should be updated instead of placing another copy
     this.player.gameboard.placeShip(col, row, +shipLen);
     this.updateBoard();
+    //I can either make it unable to drag after placing or
+    //implement something that removes the ship
+
+    //Dragend fires an event at the object that was being dragged, i can use it to remove the drag
+    //or I can make an array that controls
   }
 }

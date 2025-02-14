@@ -1,6 +1,7 @@
 export default class Ship {
   #timesHit = 0;
   #sunk = false;
+  #direction;
   constructor(length) {
     if (length === undefined || Number.isInteger(length) === false)
       throw new Error("Lenght must be provided");
@@ -11,5 +12,11 @@ export default class Ship {
   }
   isSunk() {
     return this.#timesHit >= this.length;
+  }
+  setDirection(direction) {
+    this.#direction = direction;
+  }
+  getDirection(direction) {
+    return this.#direction;
   }
 }

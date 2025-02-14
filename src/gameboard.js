@@ -79,6 +79,7 @@ export default class Gameboard {
     const coordinatesBackup = this.coordinates;
     try {
       this.setCoordinate(column, row, ship);
+      ship.setDirection(direction);
       this.#spreadShip(column, row, ship, direction, length);
     } catch (e) {
       // console.log(e);
