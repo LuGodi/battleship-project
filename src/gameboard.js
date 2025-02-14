@@ -173,6 +173,6 @@ export default class Gameboard {
     return newColumn;
   }
   #increaseVertical(row) {
-    return row + 1;
+    return Number.parseInt(row) + 1;
   }
 }

@@ -174,12 +174,15 @@ export class BoardRenderer {
       event.target.dataset.coordinates[0],
       event.target.dataset.coordinates.substring(1),
     ];
-    const shipLen = event.dataTransfer.getData("shipLength");
+    const shipLen = Number.parseInt(event.dataTransfer.getData("shipLength"));
     const shipName = event.dataTransfer.getData("shipName");
     const shipDirection = event.dataTransfer.getData("shipDirection");
     console.log(shipLen, shipName, shipDirection);
     //FIX: if ship was already placed, position should be updated instead of placing another copy
-    this.player.gameboard.placeShip(col, row, +shipLen);
+    console.log(col, row, shipLen, shipDirection);
+    //FIX: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
+    //But predetermined coord doesnt break the code
+    this.player.gameboard.placeShip(col, row, shipLen, shipDirection);
     this.updateBoard();
     //I can either make it unable to drag after placing or
     //implement something that removes the ship
