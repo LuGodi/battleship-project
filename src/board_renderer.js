@@ -142,10 +142,14 @@ export class BoardRenderer {
   }
   handleEvent(event) {
     console.log(this);
+    console.log(event.type);
+    console.log(event.target);
+    console.log(Game.getCurrentStage());
     if (event.target.dataset.coordinates === undefined) return;
-    //Refactor
-    if (event.type !== "click") return;
+    //Refactor give the event to each handler properly
+    console.log("here");
     if (event.type === "drop") this.handleDropEvent(event);
+    if (event.type !== "click") return;
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
@@ -167,11 +171,12 @@ export class BoardRenderer {
     event.preventDefault();
     console.log(event.target);
     const [col, row] = [
-      this.dataset.coordinates[0],
-      attackCoordinates.substring(1),
+      event.target.dataset.coordinates[0],
+      event.target.dataset.coordinates.substring(1),
     ];
     const len = event.dataTransfer.getData("length");
     console.log(len);
-    this.player.gameboard.placeShip(col, row, len);
+    this.player.gameboard.placeShip(col, row, +len);
+    this.updateBoard();
   }
 }

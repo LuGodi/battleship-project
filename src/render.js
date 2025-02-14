@@ -50,6 +50,7 @@ export class Render {
       //fixed
 
       const nextRenderPhase = Game.playerSetup();
+      console.log(nextRenderPhase);
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
