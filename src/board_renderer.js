@@ -176,7 +176,8 @@ export class BoardRenderer {
     ];
     const shipLen = event.dataTransfer.getData("shipLength");
     const shipName = event.dataTransfer.getData("shipName");
-    console.log(shipLen, shipName);
+    const shipDirection = event.dataTransfer.getData("shipDirection");
+    console.log(shipLen, shipName, shipDirection);
     //FIX: if ship was already placed, position should be updated instead of placing another copy
     this.player.gameboard.placeShip(col, row, +shipLen);
     this.updateBoard();

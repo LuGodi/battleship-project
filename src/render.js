@@ -175,26 +175,49 @@ export class renderUtil {
       const shipViewEl = this.makeElement("div", "ship-view");
       //TODO finish draggable implementation
       shipViewEl.draggable = true;
+      let direction = "horizontal";
+
       function dragStartEvent(event) {
+        console.log(event);
         event.dataTransfer.setData("shipName", name);
         event.dataTransfer.setData("shipLength", length);
+        event.dataTransfer.setData(
+          "shipDirection",
+          event.target.nextSibling.dataset.direction
+        );
         console.log("dragstart");
       }
       shipViewEl.addEventListener("dragstart", dragStartEvent);
+
       // shipViewEl.addEventListener("dragend", (event) => {
       //   const data = event.dataTransfer.getData("text");
       //   console.log(data);
       // });
       const shipName = this.makeElement("p", "ship-name");
       const shipLength = this.makeElement("p", "ship-length");
+      const shipDirection = this.makeElement("p", "ship-direction");
       shipName.textContent = name;
       shipLength.textContent = length;
+      shipDirection.textContent = direction;
+
       const shipInfoEl = this.makeElement(
         "div",
         "ship-info",
         shipName,
-        shipLength
+        shipLength,
+        shipDirection
       );
+      shipInfoEl.dataset.direction = direction;
+      shipInfoEl.addEventListener("click", (event) => {
+        event.currentTarget.dataset.direction =
+          event.currentTarget.dataset.direction === "horizontal"
+            ? "vertical"
+            : "horizontal";
+
+        console.log(event.currentTarget);
+        event.currentTarget.lastElementChild.innerText =
+          event.currentTarget.dataset.direction;
+      });
       menuElements.push(
         this.makeElement("div", "ship-info-container", shipViewEl, shipInfoEl)
       );
