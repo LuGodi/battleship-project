@@ -174,9 +174,11 @@ export class BoardRenderer {
       event.target.dataset.coordinates[0],
       event.target.dataset.coordinates.substring(1),
     ];
-    const len = event.dataTransfer.getData("length");
-    console.log(len);
-    this.player.gameboard.placeShip(col, row, +len);
+    const shipLen = event.dataTransfer.getData("shipLength");
+    const shipName = event.dataTransfer.getData("shipName");
+    console.log(shipLen, shipName);
+    //FIX: if ship was already placed, position should be updated instead of placing another copy
+    this.player.gameboard.placeShip(col, row, +shipLen);
     this.updateBoard();
   }
 }

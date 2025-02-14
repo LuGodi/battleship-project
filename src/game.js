@@ -59,6 +59,8 @@ export default class Game {
     if (Game.isPlayerReady(currentPlayer) === true) {
       Game.switchPlayer();
       return this.currentStage;
+    } else {
+      throw new Error("Player is not ready");
     }
   }
 
@@ -156,10 +158,10 @@ export default class Game {
     console.log("populating player", player.name);
 
     const predeterminedCoord = [
-      ["A", 1, 2, "horizontal"],
-      ["D", 1, 1, "vertical"],
+      ["A", 1, 5, "horizontal"],
+      ["D", 5, 3, "vertical"],
       ["A", 3, 4, "vertical"],
-      ["A", 8, 2, "horizontal"],
+      ["A", 8, 3, "horizontal"],
       ["A", 10, 2, "horizontal"],
     ];
     for (const coord of predeterminedCoord) {
@@ -169,7 +171,14 @@ export default class Game {
   static populateGameboard() {}
   static isPlayerReady(player) {
     const uniqueShipsInstances = new Set(player.gameboard.coordinates.values());
-    return uniqueShipsInstances.size === this.MAX_SHIPS;
+    const cellsOccupied = this.SHIPS_TYPES.reduce((sum, curr) => {
+      return curr.length + sum;
+    }, 0);
+    console.log(cellsOccupied);
+    return (
+      uniqueShipsInstances.size === this.MAX_SHIPS &&
+      player.gameboard.coordinates.size === cellsOccupied
+    );
   }
   static allPlayersReady() {
     return this.players.every((player) => this.isPlayerReady(player) === true);

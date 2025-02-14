@@ -176,7 +176,8 @@ export class renderUtil {
       //TODO finish draggable implementation
       shipViewEl.draggable = true;
       function dragStartEvent(event) {
-        event.dataTransfer.setData("length", length);
+        event.dataTransfer.setData("shipName", name);
+        event.dataTransfer.setData("shipLength", length);
         console.log("dragstart");
       }
       shipViewEl.addEventListener("dragstart", dragStartEvent);
