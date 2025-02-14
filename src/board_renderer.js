@@ -142,8 +142,10 @@ export class BoardRenderer {
   }
   handleEvent(event) {
     console.log(this);
-    if (event.type !== "click") return;
     if (event.target.dataset.coordinates === undefined) return;
+    //Refactor
+    if (event.type !== "click") return;
+    if (event.type === "drop") this.handleDropEvent(event);
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
@@ -157,12 +159,15 @@ export class BoardRenderer {
     //TODO can I put the remove event listener here ?
     console.log("handledropevent");
     console.log(Game.getCurrentStage());
+    //this here is my element
+    console.log(this);
+    console.log(this.player);
 
     if (Game.getCurrentStage() !== "playerSetup") return;
     event.preventDefault();
-    console.log(`this : ${this}`);
+    console.log(event.target);
     const [col, row] = [
-      this.target.dataset.coordinates[0],
+      this.dataset.coordinates[0],
       attackCoordinates.substring(1),
     ];
     const len = event.dataTransfer.getData("length");

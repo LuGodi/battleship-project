@@ -55,7 +55,7 @@ export class Render {
     });
 
     shipsDiv.append(shipsMenuEl, populateBtn, doneBtn);
-    board.getRenderedBoard().addEventListener("drop", board.handleDropEvent);
+    board.getRenderedBoard().addEventListener("drop", board);
     board.getRenderedBoard().addEventListener("dragover", (event) => {
       event.preventDefault();
     });
