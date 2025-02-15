@@ -61,6 +61,9 @@ body {
   display: block;
   background-color: lightgreen;
 }
+.ship-view[draggable="false"] {
+  background-color: transparent;
+}
 .ship-info-container {
   display: flex;
   flex-direction: row;

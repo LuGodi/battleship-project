@@ -168,7 +168,9 @@ export class BoardRenderer {
     console.log(this.player);
 
     if (Game.getCurrentStage() !== "playerSetup") return;
+    if (event.target.dataset.coordinates === undefined) return;
     event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
     console.log(event.target);
     const [col, row] = [
       event.target.dataset.coordinates[0],
@@ -178,9 +180,9 @@ export class BoardRenderer {
     const shipName = event.dataTransfer.getData("shipName");
     const shipDirection = event.dataTransfer.getData("shipDirection");
     console.log(shipLen, shipName, shipDirection);
-    //FIX: if ship was already placed, position should be updated instead of placing another copy
+    //TOFIX: if ship was already placed, position should be updated instead of placing another copy
     console.log(col, row, shipLen, shipDirection);
-    //FIX: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
+    //FIXED: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
     //But predetermined coord doesnt break the code
     this.player.gameboard.placeShip(col, row, shipLen, shipDirection);
     this.updateBoard();

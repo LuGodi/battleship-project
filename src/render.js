@@ -37,11 +37,17 @@ export class Render {
     const shipsMenuEl = renderUtil.makeShipsMenu(Game.SHIPS_TYPES);
     const populateBtn = document.createElement("button");
     const doneBtn = document.createElement("button");
+    const clearBtn = document.createElement("button");
+    clearBtn.textContent = "Reset";
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
     const board = new BoardRenderer(Game.getCurrentPlayer());
     this.cachedDom.domBoards.push(board);
 
+    clearBtn.addEventListener("click", (event) => {
+      Game.currentPlayer.gameboard.clearGameboard();
+      board.updateBoard();
+    });
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
       board.updateBoard();
@@ -55,10 +61,13 @@ export class Render {
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
 
-    shipsDiv.append(shipsMenuEl, populateBtn, doneBtn);
+    shipsDiv.append(shipsMenuEl, clearBtn, populateBtn, doneBtn);
     board.getRenderedBoard().addEventListener("drop", board);
     board.getRenderedBoard().addEventListener("dragover", (event) => {
+      if (event.target.dataset.coordinates === undefined) return;
       event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+      console.log(event.dataTransfer.dropEffect);
     });
     this.cachedDom.mainContainer.replaceChildren(
       shipsDiv,
@@ -179,6 +188,7 @@ export class renderUtil {
 
       function dragStartEvent(event) {
         console.log(event);
+        event.dataTransfer.dropEffect = "move";
         event.dataTransfer.setData("shipName", name);
         event.dataTransfer.setData("shipLength", length);
         event.dataTransfer.setData(
@@ -186,9 +196,17 @@ export class renderUtil {
           event.target.nextSibling.dataset.direction
         );
         console.log("dragstart");
+        console.log(event.dataTransfer.dropEffect);
       }
       shipViewEl.addEventListener("dragstart", dragStartEvent);
-
+      shipViewEl.addEventListener("dragend", (event) => {
+        //Seeing if drop was succcesful
+        if (event.dataTransfer.dropEffect === "move") {
+          event.target.draggable = false;
+        }
+        console.log("dragend");
+        console.log("drop effect " + event.dataTransfer.dropEffect);
+      });
       // shipViewEl.addEventListener("dragend", (event) => {
       //   const data = event.dataTransfer.getData("text");
       //   console.log(data);
