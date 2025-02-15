@@ -42,11 +42,11 @@ export class Render {
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
     const board = new BoardRenderer(Game.getCurrentPlayer());
-    this.cachedDom.domBoards.push(board);
 
     clearBtn.addEventListener("click", (event) => {
       Game.currentPlayer.gameboard.clearGameboard();
       board.updateBoard();
+      this.playerSetupScreen(Game.getCurrentPlayer());
     });
     populateBtn.addEventListener("click", () => {
       Game.populatePredetermined(Game.getCurrentPlayer());
@@ -57,6 +57,8 @@ export class Render {
 
       const nextRenderPhase = Game.playerSetup();
       console.log(nextRenderPhase);
+      this.cachedDom.domBoards.push(board);
+
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
     });
@@ -101,6 +103,7 @@ export class Render {
   //REFACTOR clean up this is messy
   static playerMoveScreen() {
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
+    console.log(this.cachedDom.domBoards);
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
     if (Game.currentPlayer.type === "computer") {
