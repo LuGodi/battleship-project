@@ -150,6 +150,7 @@ export class BoardRenderer {
     //Refactor give the event to each handler properly
     console.log("here");
     if (event.type === "drop") this.dropEventHandler(event);
+    if (event.type === "dragover") this.dragoverEventHandler(event);
     if (event.type !== "click") return;
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
@@ -164,5 +165,9 @@ export class BoardRenderer {
   dropEventHandler(event) {
     if (Game.getCurrentStage() !== "playerSetup") return;
     DragAndDrop.dropEventHandler.call(this, event);
+  }
+
+  dragoverEventHandler(event) {
+    DragAndDrop.dragoverEventHandler.call(this, event);
   }
 }

@@ -26,6 +26,7 @@ export default class DragAndDrop {
     //   console.log("aborted");
     //   return;
     // }
+    event.preventDefault();
     console.log(this);
     console.log(event.target);
     const [col, row] = [
@@ -62,5 +63,14 @@ export default class DragAndDrop {
 
     //Dragend fires an event at the object that was being dragged, i can use it to remove the drag
     //or I can make an array that controls
+  }
+  static dragoverEventHandler(event) {
+    if (event.target.dataset.coordinates === undefined) {
+      console.log("dragover aborting");
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    console.log(event.dataTransfer.dropEffect);
   }
 }
