@@ -1,6 +1,7 @@
 import "./board.css";
 import Game from "./game.js";
 import { BoardRenderer } from "./board_renderer.js";
+import DragAndDrop from "./drag_drop.js";
 export class Render {
   static cachedDom = {
     body: document.querySelector("body"),
@@ -192,27 +193,6 @@ export class renderUtil {
       shipViewEl.draggable = true;
       let direction = "horizontal";
 
-      function dragStartEvent(event) {
-        console.log(event);
-        event.dataTransfer.dropEffect = "move";
-        event.dataTransfer.setData("shipName", name);
-        event.dataTransfer.setData("shipLength", length);
-        event.dataTransfer.setData(
-          "shipDirection",
-          event.target.nextSibling.dataset.direction
-        );
-        console.log("dragstart");
-        console.log(event.dataTransfer.dropEffect);
-      }
-      shipViewEl.addEventListener("dragstart", dragStartEvent);
-      shipViewEl.addEventListener("dragend", (event) => {
-        //Seeing if drop was succcesful
-        if (event.dataTransfer.dropEffect === "move") {
-          event.target.draggable = false;
-        }
-        console.log("dragend");
-        console.log("drop effect " + event.dataTransfer.dropEffect);
-      });
       // shipViewEl.addEventListener("dragend", (event) => {
       //   const data = event.dataTransfer.getData("text");
       //   console.log(data);
@@ -223,7 +203,11 @@ export class renderUtil {
       shipName.textContent = name;
       shipLength.textContent = length;
       shipDirection.textContent = direction;
-
+      shipViewEl.addEventListener(
+        "dragstart",
+        DragAndDrop.dragstartEvent(name, length)
+      );
+      shipViewEl.addEventListener("dragend", DragAndDrop.dragendHandler);
       const shipInfoEl = this.makeElement(
         "div",
         "ship-info",

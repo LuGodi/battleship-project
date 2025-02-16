@@ -1,3 +1,4 @@
+import DragAndDrop from "./drag_drop";
 import Game from "./game";
 import { Render } from "./render";
 import { renderUtil } from "./render";
@@ -148,7 +149,7 @@ export class BoardRenderer {
     if (event.target.dataset.coordinates === undefined) return;
     //Refactor give the event to each handler properly
     console.log("here");
-    if (event.type === "drop") this.handleDropEvent(event);
+    if (event.type === "drop") this.dropEventHandler(event);
     if (event.type !== "click") return;
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
@@ -159,54 +160,9 @@ export class BoardRenderer {
     }
   }
 
-  handleDropEvent(event) {
-    //TODO can I put the remove event listener here ?
-    console.log("handledropevent");
-    console.log(Game.getCurrentStage());
-    //this here is my element
-    console.log(this);
-    console.log(this.player);
-
+  //make this fun reference the other fun
+  dropEventHandler(event) {
     if (Game.getCurrentStage() !== "playerSetup") return;
-    // if (event.target.dataset.coordinates === undefined) {
-    //   console.log("aborted");
-    //   return;
-    // }
-
-    console.log(event.target);
-    const [col, row] = [
-      event.target.dataset.coordinates[0],
-      event.target.dataset.coordinates.substring(1),
-    ];
-    const shipLen = Number.parseInt(event.dataTransfer.getData("shipLength"));
-    const shipName = event.dataTransfer.getData("shipName");
-    const shipDirection = event.dataTransfer.getData("shipDirection");
-    console.log(shipLen, shipName, shipDirection);
-    //TOFIX: if ship was already placed, position should be updated instead of placing another copy
-    console.log(col, row, shipLen, shipDirection);
-    //FIXED: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
-    //TOFIX: When failing placing the ship, shouldnt interrupt the whole program anymore
-    try {
-      this.player.gameboard.placeShip(col, row, shipLen, shipDirection);
-      this.updateBoard();
-    } catch (err) {
-      if (
-        err.message.includes("Invalid coordinate") ||
-        err.message.includes("Coordinate already taken")
-      ) {
-        //this is not going to work, dropEffect cant be changed on drop
-        event.dataTransfer.dropEffect = "none";
-        return;
-      }
-      throw err;
-      //notify logger
-    }
-    // event.dataTransfer.dropEffect = "move";
-
-    //I can either make it unable to drag after placing or
-    //implement something that removes the ship
-
-    //Dragend fires an event at the object that was being dragged, i can use it to remove the drag
-    //or I can make an array that controls
+    DragAndDrop.dropEventHandler.call(this, event);
   }
 }
