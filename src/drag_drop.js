@@ -1,5 +1,8 @@
 export default class DragAndDrop {
+  static #dropStatus = "";
   static dragstartEvent(shipName, shipLength) {
+    DragAndDrop.#dropStatus = "";
+
     return function dragEventHandler(e) {
       e.dataTransfer.setData("shipName", shipName);
       e.dataTransfer.setData("shipLength", shipLength);
@@ -12,8 +15,14 @@ export default class DragAndDrop {
     };
   }
   static dragendHandler(e) {
-    if (e.dataTransfer.dropEffect === "move") {
+    if (
+      e.dataTransfer.dropEffect === "move" &&
+      DragAndDrop.#dropStatus === "Success"
+    ) {
       e.target.draggable = false;
+      console.log("dragend success");
+    } else {
+      console.log("dragend failed");
     }
     console.log("dragend");
     console.log("drop effect " + e.dataTransfer.dropEffect);
@@ -50,12 +59,14 @@ export default class DragAndDrop {
         err.message.includes("Coordinate already taken")
       ) {
         //this is not going to work, dropEffect cant be changed on drop
+        DragAndDrop.#dropStatus = "Fail";
         event.dataTransfer.dropEffect = "none";
         return;
       }
       throw err;
       //notify logger
     }
+    DragAndDrop.#dropStatus = "Success";
     // event.dataTransfer.dropEffect = "move";
 
     //I can either make it unable to drag after placing or
