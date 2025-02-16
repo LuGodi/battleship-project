@@ -168,9 +168,11 @@ export class BoardRenderer {
     console.log(this.player);
 
     if (Game.getCurrentStage() !== "playerSetup") return;
-    if (event.target.dataset.coordinates === undefined) return;
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    // if (event.target.dataset.coordinates === undefined) {
+    //   console.log("aborted");
+    //   return;
+    // }
+
     console.log(event.target);
     const [col, row] = [
       event.target.dataset.coordinates[0],
@@ -183,9 +185,24 @@ export class BoardRenderer {
     //TOFIX: if ship was already placed, position should be updated instead of placing another copy
     console.log(col, row, shipLen, shipDirection);
     //FIXED: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
-    //But predetermined coord doesnt break the code
-    this.player.gameboard.placeShip(col, row, shipLen, shipDirection);
-    this.updateBoard();
+    //TOFIX: When failing placing the ship, shouldnt interrupt the whole program anymore
+    try {
+      this.player.gameboard.placeShip(col, row, shipLen, shipDirection);
+      this.updateBoard();
+    } catch (err) {
+      if (
+        err.message.includes("Invalid coordinate") ||
+        err.message.includes("Coordinate already taken")
+      ) {
+        //this is not going to work, dropEffect cant be changed on drop
+        event.dataTransfer.dropEffect = "none";
+        return;
+      }
+      throw err;
+      //notify logger
+    }
+    // event.dataTransfer.dropEffect = "move";
+
     //I can either make it unable to drag after placing or
     //implement something that removes the ship
 

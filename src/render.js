@@ -66,7 +66,10 @@ export class Render {
     shipsDiv.append(shipsMenuEl, clearBtn, populateBtn, doneBtn);
     board.getRenderedBoard().addEventListener("drop", board);
     board.getRenderedBoard().addEventListener("dragover", (event) => {
-      if (event.target.dataset.coordinates === undefined) return;
+      if (event.target.dataset.coordinates === undefined) {
+        console.log("dragover aborting");
+        return;
+      }
       event.preventDefault();
       event.dataTransfer.dropEffect = "move";
       console.log(event.dataTransfer.dropEffect);
