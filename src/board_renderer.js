@@ -199,31 +199,38 @@ export class BoardRenderer {
   renderShip(currentCell) {
     const groupedCoord = this.grouped;
     const coordinates = this.player.gameboard.coordinates;
+    //I should only loop through the cells that have a ship, or, cells that are in the coordinates array
     this.loopBoard((cell) => {
       console.log(cell);
-      const shipInstance = coordinates.get(cell.dataset.coordinates);
-      console.log(shipInstance);
-      //all the coordinates that ship occupies
-      const shipCoordinatesArr = groupedCoord.get(shipInstance);
-      //which part is this? Start, middle or end ?
-      const part = this.#assignShipParts(
-        shipCoordinatesArr,
-        shipInstance.getDirection()
-      );
-      cell.textContent = part;
-      console.log(part);
+      if (coordinates.has(cell.dataset.coordinates)) {
+        const shipInstance = coordinates.get(cell.dataset.coordinates);
+        console.log(shipInstance);
+        //all the coordinates that ship occupies
+        const shipCoordinatesArr = groupedCoord.get(shipInstance);
+        //which part is this? Start, middle or end ?
+        const part = this.#assignShipParts(
+          shipCoordinatesArr,
+          shipInstance.getDirection(),
+          cell
+        );
+        cell.textContent = part;
+        console.log(part);
+      }
+      //TODO change this to only receive the coordinates and decide which part is
+      // should return the part
+      //should not loop
     });
   }
 
   //decides if its a middle, start or end part?
-  #assignShipParts(coordinatesOccupiedByShip, shipDirection) {
-    const part = shipCoordinatesArr.indexOf(cell.dataset.coordinates);
-    const result = shipCoordinatesArr.length - part;
-    if (result === 1) return this.shipParts[shipInstance.direction + "End"];
-    else if (result === shipCoordinatesArr.length)
-      return this.shipParts[shipInstance.diretion + "Start"];
+  #assignShipParts(coordinatesOccupiedByShip, shipDirection, cell) {
+    const part = coordinatesOccupiedByShip.indexOf(cell.dataset.coordinates);
+    const result = coordinatesOccupiedByShip.length - part;
+    if (result === 1) return this.shipParts[shipDirection + "End"];
+    else if (result === coordinatesOccupiedByShip.length)
+      return this.shipParts[shipDirection + "Start"];
     else {
-      return this.shipParts[shipInstance.direction + "Middle"];
+      return this.shipParts[shipDirection + "Middle"];
     }
   }
 }
