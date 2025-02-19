@@ -8,6 +8,7 @@ export class BoardRenderer {
   className;
   renderedBoard;
   player;
+  grouped = null;
   shipParts = {
     verticalMiddle: "H",
     verticalStart: "^",
@@ -69,6 +70,7 @@ export class BoardRenderer {
     return Game.getEnemyPlayer() === this.player;
   }
   updateBoard() {
+    this.grouped = this.groupCoordinatesByInstance();
     if (this.amIEnemy() === true) {
       //need to see my ships and enemy players hits
       //I am the current player
@@ -104,29 +106,30 @@ export class BoardRenderer {
   allyView(gameboardInstance) {
     //!!
     this.renderedBoard.dataset.playerStatus = "ally";
-    this.loopBoard((cell) => {
-      //if gameboard coordinates matches missed shots or attacks received or coordinates
-      //change text content(img later) to match according to what it is
-      //board is updated whenever places ship
-      //REFACTOR
-      //TODO separate the stylying for each cell status
-      if (
-        this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
-      ) {
-        cell.textContent = "hit";
-      } else if (
-        this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
-      ) {
-        cell.textContent = "miss";
-      } else if (
-        this.player.gameboard.coordinates.has(cell.dataset.coordinates)
-      ) {
-        console.log("found");
-        cell.textContent = "ship";
-      } else {
-        cell.textContent = "";
-      }
-    });
+    this.renderShip();
+    // this.loopBoard((cell) => {
+    //   //if gameboard coordinates matches missed shots or attacks received or coordinates
+    //   //change text content(img later) to match according to what it is
+    //   //board is updated whenever places ship
+    //   //REFACTOR
+    //   //TODO separate the stylying for each cell status
+    //   if (
+    //     this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
+    //   ) {
+    //     cell.textContent = "hit";
+    //   } else if (
+    //     this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
+    //   ) {
+    //     cell.textContent = "miss";
+    //   } else if (
+    //     this.player.gameboard.coordinates.has(cell.dataset.coordinates)
+    //   ) {
+    //     console.log("found");
+    //     cell.textContent = "ship";
+    //   } else {
+    //     cell.textContent = "";
+    //   }
+    // });
   }
 
   clickBoardEvent(event) {
@@ -137,7 +140,10 @@ export class BoardRenderer {
   }
   loopBoard(callback) {
     for (let cell of this.renderedBoard.children) {
-      if (cell.dataset.isLabel === true) continue;
+      if (cell.dataset.isLabel === "true") {
+        continue;
+      }
+
       callback(cell);
     }
   }
@@ -169,5 +175,55 @@ export class BoardRenderer {
 
   dragoverEventHandler(event) {
     DragAndDrop.dragoverEventHandler.call(this, event);
+  }
+  groupCoordinatesByInstance() {
+    //I only need to run this after setup, then I can use the stored value and apply a tag for hit
+    const gameboard = this.player.gameboard;
+    const coordinatesByShips = new Map();
+    //grouping by instances
+    for (let [coordinate, instance] of gameboard.coordinates) {
+      if (coordinatesByShips.has(instance) === true) {
+        coordinatesByShips.get(instance).push(coordinate);
+      } else {
+        coordinatesByShips.set(instance, [coordinate]);
+      }
+    }
+    //Sort so its either A1 A2 A3(vertical) or A1 B1 C1(horizontal)
+    //its already sorted
+    // coordinatesByShips.forEach((val, key) => val.sort());
+
+    console.log("coordinatesbySHIPS");
+    console.log(coordinatesByShips);
+    return coordinatesByShips;
+  }
+  renderShip(currentCell) {
+    const groupedCoord = this.grouped;
+    const coordinates = this.player.gameboard.coordinates;
+    this.loopBoard((cell) => {
+      console.log(cell);
+      const shipInstance = coordinates.get(cell.dataset.coordinates);
+      console.log(shipInstance);
+      //all the coordinates that ship occupies
+      const shipCoordinatesArr = groupedCoord.get(shipInstance);
+      //which part is this? Start, middle or end ?
+      const part = this.#assignShipParts(
+        shipCoordinatesArr,
+        shipInstance.getDirection()
+      );
+      cell.textContent = part;
+      console.log(part);
+    });
+  }
+
+  //decides if its a middle, start or end part?
+  #assignShipParts(coordinatesOccupiedByShip, shipDirection) {
+    const part = shipCoordinatesArr.indexOf(cell.dataset.coordinates);
+    const result = shipCoordinatesArr.length - part;
+    if (result === 1) return this.shipParts[shipInstance.direction + "End"];
+    else if (result === shipCoordinatesArr.length)
+      return this.shipParts[shipInstance.diretion + "Start"];
+    else {
+      return this.shipParts[shipInstance.direction + "Middle"];
+    }
   }
 }
