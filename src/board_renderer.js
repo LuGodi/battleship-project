@@ -106,30 +106,31 @@ export class BoardRenderer {
   allyView(gameboardInstance) {
     //!!
     this.renderedBoard.dataset.playerStatus = "ally";
-    this.renderShip();
-    // this.loopBoard((cell) => {
-    //   //if gameboard coordinates matches missed shots or attacks received or coordinates
-    //   //change text content(img later) to match according to what it is
-    //   //board is updated whenever places ship
-    //   //REFACTOR
-    //   //TODO separate the stylying for each cell status
-    //   if (
-    //     this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
-    //   ) {
-    //     cell.textContent = "hit";
-    //   } else if (
-    //     this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
-    //   ) {
-    //     cell.textContent = "miss";
-    //   } else if (
-    //     this.player.gameboard.coordinates.has(cell.dataset.coordinates)
-    //   ) {
-    //     console.log("found");
-    //     cell.textContent = "ship";
-    //   } else {
-    //     cell.textContent = "";
-    //   }
-    // });
+    //TODO can make the loop make three arrays and then we assign the content to those depending on type of array
+
+    this.loopBoard((cell) => {
+      //if gameboard coordinates matches missed shots or attacks received or coordinates
+      //change text content(img later) to match according to what it is
+      //board is updated whenever places ship
+      //REFACTOR
+      //TODO separate the stylying for each cell status
+      if (
+        this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
+      ) {
+        cell.textContent = "hit";
+      } else if (
+        this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
+      ) {
+        cell.textContent = "miss";
+      } else if (
+        this.player.gameboard.coordinates.has(cell.dataset.coordinates)
+      ) {
+        console.log("found");
+        cell.textContent = this.renderShip(cell.dataset.coordinates);
+      } else {
+        cell.textContent = "";
+      }
+    });
   }
 
   clickBoardEvent(event) {
@@ -196,35 +197,35 @@ export class BoardRenderer {
     console.log(coordinatesByShips);
     return coordinatesByShips;
   }
-  renderShip(currentCell) {
+  renderShip(cellCoordinate) {
     const groupedCoord = this.grouped;
     const coordinates = this.player.gameboard.coordinates;
     //I should only loop through the cells that have a ship, or, cells that are in the coordinates array
-    this.loopBoard((cell) => {
-      console.log(cell);
-      if (coordinates.has(cell.dataset.coordinates)) {
-        const shipInstance = coordinates.get(cell.dataset.coordinates);
-        console.log(shipInstance);
-        //all the coordinates that ship occupies
-        const shipCoordinatesArr = groupedCoord.get(shipInstance);
-        //which part is this? Start, middle or end ?
-        const part = this.#assignShipParts(
-          shipCoordinatesArr,
-          shipInstance.getDirection(),
-          cell
-        );
-        cell.textContent = part;
-        console.log(part);
-      }
-      //TODO change this to only receive the coordinates and decide which part is
-      // should return the part
-      //should not loop
-    });
+
+    console.log(cellCoordinate);
+    if (coordinates.has(cellCoordinate)) {
+      const shipInstance = coordinates.get(cellCoordinate);
+      console.log(shipInstance);
+      //all the coordinates that ship occupies
+      const shipCoordinatesArr = groupedCoord.get(shipInstance);
+      //which part is this? Start, middle or end ?
+      const part = this.#assignShipParts(
+        shipCoordinatesArr,
+        shipInstance.getDirection(),
+        cellCoordinate
+      );
+      console.log(part);
+      return part;
+
+      //DONE change this to only receive the coordinates and decide which part is
+      // - should return the part
+      // - should not loop
+    }
   }
 
-  //decides if its a middle, start or end part?
-  #assignShipParts(coordinatesOccupiedByShip, shipDirection, cell) {
-    const part = coordinatesOccupiedByShip.indexOf(cell.dataset.coordinates);
+  //decides if its a middle, start or end part
+  #assignShipParts(coordinatesOccupiedByShip, shipDirection, coordinates) {
+    const part = coordinatesOccupiedByShip.indexOf(coordinates);
     const result = coordinatesOccupiedByShip.length - part;
     if (result === 1) return this.shipParts[shipDirection + "End"];
     else if (result === coordinatesOccupiedByShip.length)
