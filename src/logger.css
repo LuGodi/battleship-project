@@ -1,0 +1,19 @@
+.log-container {
+  border: 2px solid blue;
+  grid-area: logger;
+  align-self: start;
+  justify-self: start;
+  padding: 20px;
+  width: 100%;
+  height: fit-content;
+  position: relative;
+}
+.log-container::before {
+  content: "Logger";
+  font-size: 20px;
+  display: inline-block;
+  width: 50px;
+  position: absolute;
+  top: -20px;
+  color: white;
+}

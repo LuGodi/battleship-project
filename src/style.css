@@ -11,9 +11,10 @@ body {
   display: grid;
   grid-template-areas:
     "header"
-    "main";
-  grid-template-rows: 1fr 5fr;
-  height: 100vh;
+    "main"
+    "logger";
+  grid-template-rows: 1fr 5fr 1fr;
+  min-height: 100vh;
   width: 100vw;
   gap: 20px;
   place-items: center;

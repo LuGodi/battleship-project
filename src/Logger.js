@@ -1,4 +1,5 @@
-export class Logger {
+import "./logger.css";
+export default class Logger {
   #hitMessage = "hit";
   #missMessage = "missed";
   #sunkMessage = "sunk";
