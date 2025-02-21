@@ -127,6 +127,7 @@ export class Render {
 
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
     //REFACTOR change to handleEvent on the board
+    //listener is on the board
     const [enemyBoard] = this.cachedDom.domBoards.filter(
       (board) => board.amIEnemy() === true
     );
@@ -134,6 +135,13 @@ export class Render {
     //   .getRenderedBoard()
     //   .addEventListener("click", enemyBoard, { once: true });
     //TODO implement gameover check
+    this.cachedDom.logger.logAttack(
+      Game.getCurrentPlayer().name,
+      Game.getEnemyPlayer().name,
+      "A1",
+      true,
+      true
+    );
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static gameOverScreen() {

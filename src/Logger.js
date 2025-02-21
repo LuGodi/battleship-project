@@ -24,15 +24,16 @@ export default class Logger {
     messageEl.classList.add("log-message");
     let message;
     if (boolHit === true) {
-      message = `${player} successfully ${this.#hitMessage} ${coordinates} ${
+      message = `${currPlayer} successfully ${
+        this.#hitMessage
+      } ${coordinates} ${
         sunk === true ? "and sunk" : ""
       } ${targetPlayer}'s Ship`;
     } else {
-      message = `${player} ${this.#missMessage} ${targetPlayer}'s Ships`;
+      message = `${currPlayer} ${this.#missMessage} ${targetPlayer}'s Ships`;
     }
     messageEl.textContent = message;
     this.getLogger().appendChild(messageEl);
-    return this.Logger();
   }
   //TODO
   logStatus(currPlayer, enemyPlayer) {
