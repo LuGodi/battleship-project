@@ -227,6 +227,8 @@ export class BoardRenderer {
   #assignShipParts(coordinatesOccupiedByShip, shipDirection, coordinates) {
     const part = coordinatesOccupiedByShip.indexOf(coordinates);
     const result = coordinatesOccupiedByShip.length - part;
+    // return this.shipParts[shipDirection + result]
+
     if (result === 1) return this.shipParts[shipDirection + "End"];
     else if (result === coordinatesOccupiedByShip.length)
       return this.shipParts[shipDirection + "Start"];

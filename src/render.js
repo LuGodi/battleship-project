@@ -177,6 +177,8 @@ export class renderUtil {
     boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
     return boardContainers;
   }
+
+  //TODO move this to drag and drop ?
   static makeShipsMenu(SHIPS_TYPES) {
     const menuElements = [];
     for (let { name, length } of SHIPS_TYPES) {

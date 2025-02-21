@@ -19,8 +19,10 @@
   padding: 5px;
 }
 .board-container > div {
-  border: 1px solid rgb(55, 0, 255);
+  /* border: 1px solid rgb(55, 0, 255); */
   background-color: rgb(116, 142, 207);
+  align-content: center;
+  text-align: center;
 }
 /* counters setting and incrementing but forget about the very fist cell, it should be empty */
 .board-container > [data-row="0"]:not([data-column="0"]) {
