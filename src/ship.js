@@ -16,7 +16,7 @@ export default class Ship {
   setDirection(direction) {
     this.#direction = direction;
   }
-  getDirection(direction) {
+  getDirection() {
     return this.#direction;
   }
 }

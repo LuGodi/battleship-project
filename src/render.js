@@ -2,12 +2,14 @@ import "./board.css";
 import Game from "./game.js";
 import { BoardRenderer } from "./board_renderer.js";
 import DragAndDrop from "./drag_drop.js";
+import Logger from "./logger.js";
 export class Render {
   static cachedDom = {
     body: document.querySelector("body"),
     statusNav: document.querySelector(".header"),
     mainContainer: document.querySelector(".main-container"),
     domBoards: [],
+    logger: null,
   };
 
   static setHeader(title) {
@@ -99,6 +101,12 @@ export class Render {
   //REFACTOR clean up this is messy
   static playerMoveScreen() {
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
+    if (this.cachedDom.logger === null) {
+      const logger = Game.logger;
+      this.cachedDom.logger = logger;
+      this.cachedDom.body.append(logger.getLogger());
+    }
+
     console.log(this.cachedDom.domBoards);
     console.log("player Move Screen");
     console.log(Game.getCurrentStage());
@@ -116,8 +124,10 @@ export class Render {
       player1Board,
       player2Board
     );
+
     this.cachedDom.mainContainer.replaceChildren(boardContainers);
     //REFACTOR change to handleEvent on the board
+    //listener is on the board
     const [enemyBoard] = this.cachedDom.domBoards.filter(
       (board) => board.amIEnemy() === true
     );
@@ -125,6 +135,7 @@ export class Render {
     //   .getRenderedBoard()
     //   .addEventListener("click", enemyBoard, { once: true });
     //TODO implement gameover check
+
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static gameOverScreen() {
@@ -136,6 +147,8 @@ export class Render {
       player1Board.getRenderedBoard(),
       player2Board.getRenderedBoard()
     );
+    Game.finalStatus(Game.getCurrentPlayer());
+    Game.finalStatus(Game.getEnemyPlayer());
     Render.setHeader(`${Game.getWinner().name} is the winner`);
   }
 }
@@ -177,6 +190,8 @@ export class renderUtil {
     boardContainers.replaceChildren(board1InfoEl, board2InfoEl);
     return boardContainers;
   }
+
+  //TODO move this to drag and drop ?
   static makeShipsMenu(SHIPS_TYPES) {
     const menuElements = [];
     for (let { name, length } of SHIPS_TYPES) {
