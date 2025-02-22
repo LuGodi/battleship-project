@@ -2,7 +2,7 @@ import "./board.css";
 import Game from "./game.js";
 import { BoardRenderer } from "./board_renderer.js";
 import DragAndDrop from "./drag_drop.js";
-import Logger from "./Logger.js";
+import Logger from "./logger.js";
 export class Render {
   static cachedDom = {
     body: document.querySelector("body"),
@@ -102,7 +102,7 @@ export class Render {
   static playerMoveScreen() {
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
     if (this.cachedDom.logger === null) {
-      const logger = new Logger();
+      const logger = Game.logger;
       this.cachedDom.logger = logger;
       this.cachedDom.body.append(logger.getLogger());
     }
@@ -135,13 +135,7 @@ export class Render {
     //   .getRenderedBoard()
     //   .addEventListener("click", enemyBoard, { once: true });
     //TODO implement gameover check
-    this.cachedDom.logger.logAttack(
-      Game.getCurrentPlayer().name,
-      Game.getEnemyPlayer().name,
-      "A1",
-      true,
-      true
-    );
+
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static gameOverScreen() {
@@ -153,6 +147,8 @@ export class Render {
       player1Board.getRenderedBoard(),
       player2Board.getRenderedBoard()
     );
+    Game.finalStatus(Game.getCurrentPlayer());
+    Game.finalStatus(Game.getEnemyPlayer());
     Render.setHeader(`${Game.getWinner().name} is the winner`);
   }
 }

@@ -162,6 +162,7 @@ export class BoardRenderer {
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
+
       this.updateBoard();
       //this should not be here
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);

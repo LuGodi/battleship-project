@@ -1,11 +1,13 @@
 // import Gameboard from "./gameboard";
 import Player from "./player";
+import Logger from "./logger.js";
 
 //this will serve as the mediator ?
 export default class Game {
   static players = [];
   static stages = ["start", "playerSetup", "playerMove", "gameOver"];
   static gameover = false;
+  static logger = new Logger();
 
   //first item will be the current player
   static player1;
@@ -73,11 +75,24 @@ export default class Game {
     this.currentStage = "playerMove";
     const enemyPlayer = this.getEnemyPlayer();
     const hit = enemyPlayer.gameboard.receiveAttack(column, row);
+    const sunk =
+      hit === false
+        ? false
+        : enemyPlayer.gameboard.getCoordinate(column, row).isSunk();
+
+    this.logger.logAttack(
+      this.getCurrentPlayer().name,
+      this.getEnemyPlayer().name,
+      attackCoordinates,
+      hit,
+      sunk
+    );
     console.log(
       `${enemyPlayer.name} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
     );
     if (this.isGameover()) {
       this.currentStage = "gameOver";
+
       return this.currentStage;
     }
     //insert gameovercheck
@@ -122,9 +137,29 @@ export default class Game {
     this.gameover = this.players.some(
       (player) => player.gameboard.allSunk() === true
     );
+
     return this.gameover;
     // const enemyPlayer = Game.getEnemyPlayer();
     // return enemyPlayer.gameboard.allSunk();
+  }
+  static finalStatus(player) {
+    const [enemy] = this.players.filter((p) => p !== player);
+    const gameboard = enemy.gameboard;
+    const ships = Array.from(new Set(gameboard.coordinates.values()));
+    const shipsSunk = ships.filter((ship) => ship.isSunk() === true);
+    console.log(shipsSunk);
+    const status = {
+      player: player,
+      attacksReceived: gameboard.attacksReceived.length,
+      missedShotsReceived: gameboard.missedShots.length,
+      sunkShips: shipsSunk.length,
+    };
+    this.logger.logStatus(player, {
+      enemyPlayer: enemy,
+      sunkShips: status.sunkShips,
+      dealtAttacks: status.attacksReceived,
+      missedHits: status.missedShotsReceived,
+    });
   }
   static getWinner() {
     if (this.gameover === false) return;
