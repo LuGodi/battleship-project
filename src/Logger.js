@@ -11,8 +11,11 @@ export default class Logger {
     return this.#element;
   }
   buildLoggerEl() {
+    const logHeader = document.createElement("div");
     const logContainer = document.createElement("div");
+    // logHeader.classList.add("log-header");
     logContainer.classList.add("log-container");
+    // logHeader.append(logContainer);
     return logContainer;
   }
   //   setAttackMessage(message="hit"){

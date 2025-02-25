@@ -1,3 +1,6 @@
+body:has(.log-container) {
+  justify-content: center;
+}
 .log-container {
   border: 2px solid blue;
   grid-area: logger;
@@ -5,8 +8,9 @@
   justify-self: start;
   padding: 20px;
   width: 100%;
-  height: fit-content;
+  height: 10ch;
   position: relative;
+  overflow: auto;
 }
 .log-container::before {
   content: "Logger";
