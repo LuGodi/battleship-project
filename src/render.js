@@ -2,7 +2,6 @@ import "./board.css";
 import Game from "./game.js";
 import { BoardRenderer } from "./board_renderer.js";
 import DragAndDrop from "./drag_drop.js";
-import Logger from "./logger.js";
 export class Render {
   static cachedDom = {
     body: document.querySelector("body"),

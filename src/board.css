@@ -1,6 +1,8 @@
 :root {
   --rows: 10;
   --columns: 10;
+  --tile-height: 40px;
+  --tile-width: 40px;
 }
 
 .board-containers {
@@ -13,8 +15,8 @@
   height: 500px;
   width: 500px;
   display: grid;
-  grid-template-columns: repeat(11, 1fr);
-  grid-template-rows: repeat(11, 1fr);
+  grid-template-columns: repeat(11, var(--tile-width));
+  grid-template-rows: repeat(11, var(--tile-height));
   gap: 5px;
   padding: 5px;
 }
@@ -23,6 +25,10 @@
   background-color: rgb(116, 142, 207);
   align-content: center;
   text-align: center;
+}
+.board-container > div > img {
+  max-width: 40px;
+  height: 40px;
 }
 /* counters setting and incrementing but forget about the very fist cell, it should be empty */
 .board-container > [data-row="0"]:not([data-column="0"]) {

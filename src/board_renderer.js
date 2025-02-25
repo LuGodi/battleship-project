@@ -2,6 +2,16 @@ import DragAndDrop from "./drag_drop";
 import Game from "./game";
 import { Render } from "./render";
 import { renderUtil } from "./render";
+import hitImg from "./assets/hit.png";
+import missImg from "./assets/miss.png";
+import shipImg from "./assets/ship.png";
+import shipEndImg from "./assets/shipEnd.png";
+import shipEndVerticalImg from "./assets/shipEndVertical.png";
+import shipStartImg from "./assets/shipStart.png";
+import shipStartVerticalImg from "./assets/shipStartVertical.png";
+import shipMiddleImg from "./assets/shipMiddle.png";
+import shipMiddleVerticalImg from "./assets/shipMiddleVertical.png";
+
 export class BoardRenderer {
   rows;
   columns;
@@ -9,13 +19,13 @@ export class BoardRenderer {
   renderedBoard;
   player;
   grouped = null;
-  shipParts = {
-    verticalMiddle: "H",
-    verticalStart: "^",
-    verticalEnd: "v",
-    horizontalStart: "<",
-    horizontalEnd: ">",
-    horizontalMiddle: "=",
+  static shipParts = {
+    verticalMiddle: shipMiddleVerticalImg,
+    verticalStart: shipStartVerticalImg,
+    verticalEnd: shipEndVerticalImg,
+    horizontalStart: shipStartImg,
+    horizontalEnd: shipEndImg,
+    horizontalMiddle: shipMiddleImg,
   };
   constructor(player, rows = 10, columns = 10, className = "board-container") {
     this.rows = rows;
@@ -23,6 +33,13 @@ export class BoardRenderer {
     this.className = className;
     this.player = player;
     this.init(rows, columns, className);
+    BoardRenderer.preloadImgs();
+  }
+  static preloadImgs() {
+    Object.values(this.shipParts).forEach((imgSrc) => {
+      const img = new Image();
+      img.src = imgSrc;
+    });
   }
   init() {
     const rows = this.rows;
@@ -51,6 +68,7 @@ export class BoardRenderer {
     }
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
+
     boardContainer.dataset.player = this.player.name;
     boardContainer.addEventListener("click", this);
     // const boundEvent = this.clickBoardEvent.bind(this);
@@ -95,11 +113,15 @@ export class BoardRenderer {
 
     this.loopBoard((cell) => {
       if (missedHits.includes(cell.dataset.coordinates)) {
-        cell.textContent = "miss";
+        const missEl = new Image();
+        missEl.src = missImg;
+        cell.replaceChildren(missEl);
       } else if (attacksReceived.includes(cell.dataset.coordinates)) {
-        cell.textContent = "hit";
+        const hitEl = new Image();
+        hitEl.src = hitImg;
+        cell.replaceChildren(hitEl);
       } else {
-        cell.textContent = "";
+        cell.replaceChildren();
       }
     });
   }
@@ -117,18 +139,22 @@ export class BoardRenderer {
       if (
         this.player.gameboard.attacksReceived.includes(cell.dataset.coordinates)
       ) {
-        cell.textContent = "hit";
+        const hitEl = new Image();
+        hitEl.src = hitImg;
+        cell.replaceChildren(hitEl);
       } else if (
         this.player.gameboard.missedShots.includes(cell.dataset.coordinates)
       ) {
-        cell.textContent = "miss";
+        const missEl = new Image();
+        missEl.src = missImg;
+        cell.replaceChildren(missEl);
       } else if (
         this.player.gameboard.coordinates.has(cell.dataset.coordinates)
       ) {
         console.log("found");
-        cell.textContent = this.renderShip(cell.dataset.coordinates);
+        cell.replaceChildren(this.renderShip(cell.dataset.coordinates));
       } else {
-        cell.textContent = "";
+        cell.replaceChildren();
       }
     });
   }
@@ -215,8 +241,10 @@ export class BoardRenderer {
         shipInstance.getDirection(),
         cellCoordinate
       );
+      const partImg = new Image();
+      partImg.src = part;
       console.log(part);
-      return part;
+      return partImg;
 
       //DONE change this to only receive the coordinates and decide which part is
       // - should return the part
@@ -230,11 +258,11 @@ export class BoardRenderer {
     const result = coordinatesOccupiedByShip.length - part;
     // return this.shipParts[shipDirection + result]
 
-    if (result === 1) return this.shipParts[shipDirection + "End"];
+    if (result === 1) return BoardRenderer.shipParts[shipDirection + "End"];
     else if (result === coordinatesOccupiedByShip.length)
-      return this.shipParts[shipDirection + "Start"];
+      return BoardRenderer.shipParts[shipDirection + "Start"];
     else {
-      return this.shipParts[shipDirection + "Middle"];
+      return BoardRenderer.shipParts[shipDirection + "Middle"];
     }
   }
 }

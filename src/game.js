@@ -1,7 +1,6 @@
 // import Gameboard from "./gameboard";
 import Player from "./player";
 import Logger from "./logger.js";
-
 //this will serve as the mediator ?
 export default class Game {
   static players = [];
