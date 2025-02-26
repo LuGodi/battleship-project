@@ -6,7 +6,11 @@
 :root {
   background-color: black;
   color: white;
+  font-family: sans-serif;
+  --ship-view-tile: 20px;
+  --max-ship-size: 0;
 }
+
 body {
   display: grid;
   grid-template-areas:
@@ -50,7 +54,7 @@ body {
   display: flex;
 
   flex-direction: column;
-  row-gap: 50px;
+  row-gap: 5px;
 }
 .ships-menu > * {
   border: 1px solid blue;
@@ -62,15 +66,27 @@ body {
   display: block;
   background-color: lightgreen;
 }
+.ship-parts-view img {
+  height: var(--ship-view-tile);
+  width: var(--ship-view-tile);
+  pointer-events: none;
+}
+.ship-parts-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--max-ship-size) * var(--ship-view-tile));
+  height: calc(var(--max-ship-size) * var(--ship-view-tile));
+}
 .ship-view[draggable="false"] {
   background-color: transparent;
 }
 .ship-info-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .ship-info {
-  margin-left: auto;
   padding: 5px;
 }
 .ship-info .ship-name::before {

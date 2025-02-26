@@ -194,10 +194,11 @@ export class renderUtil {
   static makeShipsMenu(SHIPS_TYPES) {
     const menuElements = [];
     for (let { name, length } of SHIPS_TYPES) {
-      const shipViewEl = this.makeElement("div", "ship-view");
+      // const shipViewEl = this.makeElement("div", "ship-view");
+      let direction = "horizontal";
+      const shipViewEl = this.makeShipMenuImgs(length, direction);
       //TODO finish draggable implementation
       shipViewEl.draggable = true;
-      let direction = "horizontal";
 
       // shipViewEl.addEventListener("dragend", (event) => {
       //   const data = event.dataTransfer.getData("text");
@@ -238,6 +239,26 @@ export class renderUtil {
     }
     const shipsMenuEl = this.makeElement("div", "ships-menu", ...menuElements);
     return shipsMenuEl;
+  }
+  static makeShipMenuImgs(length, direction) {
+    // const imgs = BoardRenderer.shipParts;
+    // const imgVertical = []
+    // const imgHorizontal = [BoardRenderer.shipParts.horizontalStart,BoardRenderer.shipParts]
+    document.documentElement.style.setProperty(
+      "--max-ship-size",
+      Game.SHIP_MAX_SIZE
+    );
+    const containerEl = renderUtil.makeElement("div", "ship-parts-view");
+    const grid = [];
+    for (let i = 0; i < length; i++) {
+      const part = new Image();
+      if (i === 0) part.src = BoardRenderer.shipParts[direction + "Start"];
+      else if (i === length - 1)
+        part.src = BoardRenderer.shipParts[direction + "End"];
+      else part.src = BoardRenderer.shipParts[direction + "Middle"];
+      containerEl.append(part);
+    }
+    return containerEl;
   }
 }
 // export class UI(){

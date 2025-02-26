@@ -1,6 +1,9 @@
 body:has(.log-container) {
   justify-content: center;
 }
+.main-container + .log-container {
+  min-width: 1000px;
+}
 .log-container {
   border: 2px solid blue;
   grid-area: logger;

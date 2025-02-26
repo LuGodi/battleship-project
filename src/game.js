@@ -21,14 +21,22 @@ export default class Game {
     { name: "Submarine", length: 3 },
     { name: "Patrol Boat", length: 2 },
   ];
+
   static MAX_SHIPS = this.SHIPS_TYPES.length;
   //shouldnt I manage the phases here ?
-  static start() {
+  static get SHIP_MAX_SIZE() {
+    let maxSize = 0;
+    for (let { length } of Game.SHIPS_TYPES) {
+      maxSize = length > maxSize ? length : maxSize;
+    }
+    return maxSize;
+  }
+  static start(twoPlayers) {
     //populate the gameboard with predetermined coordinates
     console.log("start game");
     this.currentStage = "start";
 
-    Game.players.push(new Player("real", "p1"), new Player("computer", "p2"));
+    Game.players.push(new Player("real", "p1"), new Player("real", "p2"));
     [this.player1, this.player2] = this.players;
     Game.currentPlayer = this.player1;
     const nextStage = "playerSetup";
