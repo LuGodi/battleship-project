@@ -1,6 +1,7 @@
 // import Gameboard from "./gameboard";
 import Player from "./player";
 import Logger from "./logger.js";
+import Gameboard from "./gameboard.js";
 //this will serve as the mediator ?
 export default class Game {
   static players = [];
@@ -83,6 +84,7 @@ export default class Game {
   }
 
   //I should decide if it gets column,row or coordinates
+  //I can use the Gameboard.splitColumnRow here to get the column and row
   static playerMove(attackCoordinates, waitTime = 0) {
     const [column, row] = [
       attackCoordinates[0],
@@ -205,9 +207,9 @@ export default class Game {
       `switched from ${oldCurrPlayer.name} to ${this.currentPlayer.name}`
     );
   }
-  static populatePredetermined(player) {
+  static populatePredetermined(player, coordArray) {
     console.log("populating player", player.name);
-
+    player.gameboard.clearGameboard();
     const predeterminedCoord = [
       ["A", 1, 5, "horizontal"],
       ["D", 5, 3, "vertical"],
@@ -219,7 +221,38 @@ export default class Game {
       Game.getCurrentPlayer().gameboard.placeShip(...coord);
     }
   }
-  static populateGameboard() {}
+  static populateGameboard(player) {
+    player.gameboard.clearGameboard();
+    const avaiableShips = Game.SHIPS_TYPES;
+    for (let ship of avaiableShips) {
+      let shipSize = ship.length;
+      while (true) {
+        let coordinates;
+        let randomDirection;
+        let column;
+        let row;
+        try {
+          coordinates = Game.generateRandomCoordinate();
+          randomDirection =
+            Math.floor(Math.random() * 2) === 0 ? "vertical" : "horizontal";
+          [column, row] = Gameboard.splitColumnRow(coordinates);
+          player.gameboard.placeShip(column, row, shipSize, randomDirection);
+          break;
+        } catch (error) {
+          if (
+            error.message.includes("Coordinate already taken") ||
+            error.message.includes("Invalid coordinate")
+          ) {
+            console.error(
+              `tried to place at ${coordinates}, separated ${column},${row}, regenerating`
+            );
+          } else {
+            throw error;
+          }
+        }
+      }
+    }
+  }
   static isPlayerReady(player) {
     const uniqueShipsInstances = new Set(player.gameboard.coordinates.values());
     const cellsOccupied = this.SHIPS_TYPES.reduce((sum, curr) => {

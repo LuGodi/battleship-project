@@ -62,7 +62,7 @@ export class Render {
       this.playerSetupScreen(Game.getCurrentPlayer());
     });
     populateBtn.addEventListener("click", () => {
-      Game.populatePredetermined(Game.getCurrentPlayer());
+      Game.populateGameboard(Game.getCurrentPlayer());
       board.updateBoard();
     });
     doneBtn.addEventListener("click", () => {
