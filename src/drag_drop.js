@@ -10,6 +10,8 @@ export default class DragAndDrop {
         "shipDirection",
         e.target.nextSibling.dataset.direction
       );
+
+      // e.dataTransfer.setDragImage(e.target, 40, 40);
       console.log("dragstart");
       console.log(e.dataTransfer.dropEffect);
     };

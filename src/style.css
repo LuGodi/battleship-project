@@ -71,6 +71,13 @@ body {
   width: var(--ship-view-tile);
   pointer-events: none;
 }
+.ship-parts-view:has(+ .ship-info[data-direction="vertical"]) {
+  /* rotate: 90deg; */
+  flex-direction: column;
+}
+.ship-parts-view:has(+ .ship-info[data-direction="vertical"]) img {
+  rotate: 90deg;
+}
 .ship-parts-view {
   display: flex;
   justify-content: center;
