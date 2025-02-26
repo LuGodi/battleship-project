@@ -6,8 +6,16 @@ export default class Gameboard {
   attacksReceived = [];
   //TODO change to board instead of coordinates to avoid confusion
   coordinates;
+
   constructor() {
     this.coordinates = new Map();
+  }
+  static splitColumnRow(stringCoordinates) {
+    const [column, row] = [
+      stringCoordinates[0],
+      stringCoordinates.substring(1),
+    ];
+    return [column, row];
   }
   clearGameboard() {
     //this is not pure

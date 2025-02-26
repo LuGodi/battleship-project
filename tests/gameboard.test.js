@@ -259,8 +259,14 @@ describe("gameboard", () => {
       "Should reverse the board to how it was before the attempted that threw the error"
     );
   });
-  describe.skip("testing private properties i know i should not but", () => {
-    test.skip("increase Horizontal should ... increase column", () => {});
+  describe("testing utility static methods", () => {
+    test("Should convert a coordinate string to a separate row and column", () => {
+      expect(Gameboard.splitColumnRow("A1")).toStrictEqual(["A", "1"]);
+      expect(Gameboard.splitColumnRow("B9")).toStrictEqual(["B", "9"]);
+    });
+    test("Should properly convert a two digit row", () => {
+      expect(Gameboard.splitColumnRow("A10")).toStrictEqual(["A", "10"]);
+    });
   });
 
   ////
