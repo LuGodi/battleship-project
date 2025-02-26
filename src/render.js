@@ -45,6 +45,13 @@ export class Render {
   }
   //BUG: stage isnt changing to playerSetup
   static playerSetupScreen(currentPlayer) {
+    const board = new BoardRenderer(Game.getCurrentPlayer());
+
+    if (Game.getCurrentPlayer().type === "computer") {
+      Game.populateGameboard(Game.getCurrentPlayer());
+      setupDone();
+      return;
+    }
     Render.setHeader(`${Game.getCurrentPlayer().name}'s Turn - Setup Phase`);
     const shipsDiv = renderUtil.makeElement("div", "ship-placement-container");
     const shipsMenuEl = renderUtil.makeShipsMenu(Game.SHIPS_TYPES);
@@ -54,7 +61,6 @@ export class Render {
     clearBtn.textContent = "Reset";
     populateBtn.textContent = `Populate ${Game.getCurrentPlayer().name} board`;
     doneBtn.textContent = `Done`;
-    const board = new BoardRenderer(Game.getCurrentPlayer());
 
     clearBtn.addEventListener("click", (event) => {
       Game.currentPlayer.gameboard.clearGameboard();
@@ -65,16 +71,17 @@ export class Render {
       Game.populateGameboard(Game.getCurrentPlayer());
       board.updateBoard();
     });
-    doneBtn.addEventListener("click", () => {
+    doneBtn.addEventListener("click", setupDone);
+    function setupDone(event) {
       //fixed
 
       const nextRenderPhase = Game.playerSetup();
       console.log(nextRenderPhase);
-      this.cachedDom.domBoards.push(board);
+      Render.cachedDom.domBoards.push(board);
 
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);
-    });
+    }
 
     shipsDiv.append(shipsMenuEl, clearBtn, populateBtn, doneBtn);
     board.getRenderedBoard().addEventListener("drop", board);
