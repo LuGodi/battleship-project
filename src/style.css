@@ -86,8 +86,8 @@ body {
   height: calc(var(--max-ship-size) * var(--ship-view-tile));
 }
 .ship-parts-view[draggable="false"] {
-  /* visibility: hidden; */
-  display: none;
+  visibility: hidden;
+  /* display: none; */
 }
 .ship-info-container {
   display: flex;

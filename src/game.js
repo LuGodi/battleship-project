@@ -31,12 +31,21 @@ export default class Game {
     }
     return maxSize;
   }
-  static start(twoPlayers) {
+  static start(mode = 1) {
     //populate the gameboard with predetermined coordinates
     console.log("start game");
     this.currentStage = "start";
-
-    Game.players.push(new Player("real", "p1"), new Player("real", "p2"));
+    if (mode === 1) {
+      Game.players.push(
+        new Player("real", "You"),
+        new Player("computer", "Computer")
+      );
+    } else {
+      Game.players.push(
+        new Player("real", "Player 1"),
+        new Player("real", "Player 2")
+      );
+    }
     [this.player1, this.player2] = this.players;
     Game.currentPlayer = this.player1;
     const nextStage = "playerSetup";

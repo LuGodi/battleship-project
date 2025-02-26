@@ -19,13 +19,24 @@ export class Render {
   static gameStartScreen() {
     //TODO memoize
     console.log("game start screen");
-    const gameStartBtn = document.createElement("button");
-    gameStartBtn.textContent = "Start";
-    gameStartBtn.addEventListener("click", (event) => {
-      const nextRenderPhase = Game.start();
+    const onePlayerBtn = document.createElement("button");
+    const twoPlayersBtn = document.createElement("button");
+    onePlayerBtn.textContent = "One player Mode";
+    twoPlayersBtn.textContent = "Two players Mode";
+    //TODO: No need to repeat, clean this up later
+    onePlayerBtn.addEventListener("click", (event) => {
+      const nextRenderPhase = Game.start(1);
+      Render.cachedDom.mainContainer.classList.remove("game-start-phase");
       Render.nextScreen(Render[nextRenderPhase + "Screen"]);
     });
-    Render.cachedDom.mainContainer.replaceChildren(gameStartBtn);
+    twoPlayersBtn.addEventListener("click", (event) => {
+      const nextRenderPhase = Game.start(2);
+      Render.cachedDom.mainContainer.classList.remove("game-start-phase");
+
+      Render.nextScreen(Render[nextRenderPhase + "Screen"]);
+    });
+    Render.cachedDom.mainContainer.replaceChildren(onePlayerBtn, twoPlayersBtn);
+    Render.cachedDom.mainContainer.classList.add("game-start-phase");
     this.cachedDom.statusNav.textContent = "BattleShip";
   }
   static updateCachedBoards() {
