@@ -85,8 +85,9 @@ body {
   width: calc(var(--max-ship-size) * var(--ship-view-tile));
   height: calc(var(--max-ship-size) * var(--ship-view-tile));
 }
-.ship-view[draggable="false"] {
-  background-color: transparent;
+.ship-parts-view[draggable="false"] {
+  /* visibility: hidden; */
+  display: none;
 }
 .ship-info-container {
   display: flex;
