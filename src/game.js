@@ -38,7 +38,7 @@ export default class Game {
     this.currentStage = "start";
     if (mode === 1) {
       Game.players.push(
-        new Player("real", "You"),
+        new Player("real", "Player"),
         new Player("computer", "Computer")
       );
     } else {

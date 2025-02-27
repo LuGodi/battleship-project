@@ -15,6 +15,12 @@
   font-weight: 100;
   font-style: normal;
 }
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url(./assets/fonts/JetBrainsMono-ExtraBold.woff2);
+  font-weight: 800;
+  font-style: bold;
+}
 :root {
   font-family: "JetBrains Mono", monospace;
   --ship-view-tile: 20px;

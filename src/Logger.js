@@ -26,7 +26,7 @@ export default class Logger {
     const spanEl = document.createElement("span");
     spanEl.classList.add("log-message");
     spanEl.classList.add(`log-${type}`);
-    spanEl.dataset.playerName = playerName;
+    spanEl.dataset.playerName = playerName ? playerName : "";
     spanEl.textContent = message;
     this.getLogger().insertBefore(spanEl, this.getLogger().firstChild);
   }
@@ -52,6 +52,6 @@ export default class Logger {
     Attacks Dealt: ${dealtAttacks}\n
     Missed Hits: ${missedHits}\n
     `;
-    this.logMessage(message, "status", currPlayer);
+    this.logMessage(message, "status");
   }
 }
