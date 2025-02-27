@@ -45,6 +45,7 @@ export class Render {
   }
   //BUG: stage isnt changing to playerSetup
   static playerSetupScreen(currentPlayer) {
+    this.cachedDom.mainContainer.classList.add("player-setup-phase");
     const board = new BoardRenderer(Game.getCurrentPlayer());
 
     if (Game.getCurrentPlayer().type === "computer") {
@@ -78,6 +79,7 @@ export class Render {
       const nextRenderPhase = Game.playerSetup();
       console.log(nextRenderPhase);
       Render.cachedDom.domBoards.push(board);
+      Render.cachedDom.mainContainer.classList.remove("player-setup-phase");
 
       // Render.cachedDom.renderedBoards.push(board);
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 500);

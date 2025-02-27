@@ -1,11 +1,11 @@
 body:has(.log-container) {
-  justify-content: center;
+  /* justify-content: center; */
 }
 .main-container + .log-container {
   min-width: 1000px;
 }
 .log-container {
-  border: 2px solid blue;
+  border: 1px solid var(--color--text);
   grid-area: logger;
   align-self: start;
   justify-self: start;

@@ -3,6 +3,7 @@
   --columns: 10;
   --tile-height: 40px;
   --tile-width: 40px;
+  --label-counter-size: 2ch;
 }
 
 .board-containers {
@@ -10,8 +11,11 @@
   flex-direction: row;
   gap: 30px;
 }
+.board-header-info {
+  display: block;
+  text-align: center;
+}
 .board-container {
-  background-color: rgb(189, 207, 252);
   height: 500px;
   width: 500px;
   display: grid;
@@ -33,30 +37,36 @@
 /* counters setting and incrementing but forget about the very fist cell, it should be empty */
 .board-container > [data-row="0"]:not([data-column="0"]) {
   counter-increment: column;
+  background-color: transparent;
 }
 .board-container > [data-column="0"]:not([data-row="0"]) {
   counter-increment: row;
+  background-color: transparent;
 }
 /* selecting the header row to define columns labels */
 /* 0 0 is the empty cell, so we cant count row 0 */
+/* row counters */
 .board-container > [data-column="0"]:not([data-row="0"])::before {
   content: counter(row);
   display: block;
-  text-align: center;
-
-  background-color: pink;
+  text-align: end;
+  margin-right: 3px;
+  font-size: var(--label-counter-size);
+  background-color: transparent;
   /* height: 100%; */
   /* grid-column: attr(data-column);
   grid-row: attr(data-column); */
 }
+/* column counters */
 .board-container > [data-row="0"]:not([data-column="0"])::before {
   content: counter(column, upper-alpha);
   display: block;
   /* height: 100%; */
   text-align: center;
-  background-color: purple;
+  background-color: transparent;
+  font-size: var(--label-counter-size);
 }
 
 .board-container > [data-row="0"][data-column="0"] {
-  background-color: magenta;
+  background-color: transparent;
 }
