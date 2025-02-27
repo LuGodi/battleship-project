@@ -26,4 +26,12 @@ body:has(.log-container) {
 }
 .log-message {
   display: block;
+  color: var(--color--text);
+  font-weight: 100;
+}
+
+.log-message[data-player-name="You"],
+.log-message[data-player-name="Player 1"] {
+  color: var(--color--board-color);
+  font-weight: 300;
 }

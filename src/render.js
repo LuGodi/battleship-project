@@ -126,9 +126,14 @@ export class Render {
       this.cachedDom.body.append(logger.getLogger());
     }
 
-    console.log(this.cachedDom.domBoards);
-    console.log("player Move Screen");
-    console.log(Game.getCurrentStage());
+    document.documentElement.style.setProperty(
+      "--current-player",
+      Game.getCurrentPlayer().name
+    );
+
+    // console.log(this.cachedDom.domBoards);
+    // console.log("player Move Screen");
+    // console.log(Game.getCurrentStage());
     if (Game.currentPlayer.type === "computer") {
       const nextRenderPhase = Game.computerPlayerMove();
       Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);

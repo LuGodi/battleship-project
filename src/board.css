@@ -4,6 +4,8 @@
   --tile-height: 40px;
   --tile-width: 40px;
   --label-counter-size: 2ch;
+  --water-color: #263e7c;
+  --current-player: "none";
 }
 
 .board-containers {
@@ -23,10 +25,19 @@
   grid-template-rows: repeat(11, var(--tile-height));
   gap: 5px;
   padding: 5px;
+  align-self: baseline;
+}
+
+/* TODO didnt work, i would like to look it up later */
+/* .board-container[data-player~="var(--current-player)"] {
+  opacity: 0.3;
+} */
+.board-container[data-player-status="ally"] {
+  opacity: 0.3;
 }
 .board-container > div {
   /* border: 1px solid rgb(55, 0, 255); */
-  background-color: rgb(116, 142, 207);
+  background-color: var(--water-color);
   align-content: center;
   text-align: center;
 }

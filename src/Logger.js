@@ -22,10 +22,11 @@ export default class Logger {
   //     return message
   //   }
   //   setMissMessage(message)
-  logMessage(message, type) {
+  logMessage(message, type, playerName) {
     const spanEl = document.createElement("span");
     spanEl.classList.add("log-message");
     spanEl.classList.add(`log-${type}`);
+    spanEl.dataset.playerName = playerName;
     spanEl.textContent = message;
     this.getLogger().insertBefore(spanEl, this.getLogger().firstChild);
   }
@@ -40,7 +41,7 @@ export default class Logger {
     } else {
       message += `${this.#missMessage} ${targetPlayer}'s Ships`;
     }
-    this.logMessage(message, "attack");
+    this.logMessage(message, "attack", currPlayer);
     // messageEl.textContent = message;
     // this.getLogger().appendChild(messageEl);
   }
@@ -51,6 +52,6 @@ export default class Logger {
     Attacks Dealt: ${dealtAttacks}\n
     Missed Hits: ${missedHits}\n
     `;
-    this.logMessage(message, "status");
+    this.logMessage(message, "status", currPlayer);
   }
 }
