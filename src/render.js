@@ -73,7 +73,7 @@ export class Render {
     populateBtn.addEventListener("click", () => {
       Game.populateGameboard(Game.getCurrentPlayer());
       shipsDiv
-        .querySelectorAll(".ship-parts-view")
+        .querySelectorAll(".ship-info-container")
         .forEach((part) => part.remove());
       board.updateBoard();
     });

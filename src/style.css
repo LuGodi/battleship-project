@@ -233,5 +233,5 @@ body {
   height: 20px;
   background-size: contain;
   background-repeat: no-repeat;
-  transform: translate(15ch, 1ch) rotateZ(11deg);
+  transform: translate(500%, 0) rotateZ(11deg);
 }
