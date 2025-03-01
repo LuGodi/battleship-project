@@ -156,9 +156,7 @@ export class Render {
     const [enemyBoard] = this.cachedDom.domBoards.filter(
       (board) => board.amIEnemy() === true
     );
-    // enemyBoard
-    //   .getRenderedBoard()
-    //   .addEventListener("click", enemyBoard, { once: true });
+    enemyBoard.getRenderedBoard().addEventListener("click", enemyBoard);
     //TODO implement gameover check
 
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);

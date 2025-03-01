@@ -19,6 +19,7 @@ export class BoardRenderer {
   renderedBoard;
   player;
   grouped = null;
+  static TIME_FOR_HIT_FEEDBACK = 2000;
   static shipParts = {
     verticalMiddle: shipMiddleVerticalImg,
     verticalStart: shipStartVerticalImg,
@@ -70,7 +71,7 @@ export class BoardRenderer {
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
 
     boardContainer.dataset.player = this.player.name;
-    boardContainer.addEventListener("click", this);
+    // boardContainer.addEventListener("click", this);
     // const boundEvent = this.clickBoardEvent.bind(this);
     // boardContainer.addEventListener("click", boundEvent);
 
@@ -161,7 +162,6 @@ export class BoardRenderer {
 
   clickBoardEvent(event) {
     if (this.amIEnemy() === true) {
-      // console.log(event.target.dataset.coordinates);
       return event.target.dataset.coordinates;
     }
   }
@@ -188,10 +188,15 @@ export class BoardRenderer {
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
-
-      this.updateBoard();
-      //this should not be here
-      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+      this.getRenderedBoard().removeEventListener("click", this);
+      // this.updateBoard();
+      //Because playerMove changed the active player, update board will detect the current board as an ally instead of enemy, so we override it to be enemyView
+      //THIS ALSO INTRODUCES A BUG, IN WHICH IF YOU CLICK ON YOUR BOARD BEFORE THE TIME YOU CAN ATTACK IT
+      //Fixed by disabling pointer events and by placing listener on the enemy board ONLY and removing it later
+      this.enemyView();
+      setTimeout(() => {
+        Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+      }, BoardRenderer.TIME_FOR_HIT_FEEDBACK);
     }
   }
 

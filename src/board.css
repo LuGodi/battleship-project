@@ -34,6 +34,7 @@
 } */
 .player-move-phase .board-container[data-player-status="ally"] {
   opacity: 0.3;
+  pointer-events: NONE;
 }
 .board-container > div {
   /* border: 1px solid rgb(55, 0, 255); */
