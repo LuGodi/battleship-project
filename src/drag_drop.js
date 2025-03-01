@@ -21,7 +21,8 @@ export default class DragAndDrop {
       e.dataTransfer.dropEffect === "move" &&
       DragAndDrop.#dropStatus === "Success"
     ) {
-      e.target.draggable = false;
+      // e.target.draggable = false;
+      e.target.parentElement.remove();
       console.log("dragend success");
     } else {
       console.log("dragend failed");
@@ -86,4 +87,9 @@ export default class DragAndDrop {
     event.dataTransfer.dropEffect = "move";
     console.log(event.dataTransfer.dropEffect);
   }
+  // static dragLeaveEventHandler(event) {
+  //   event.preventDefault();
+  //   console.log("dragleave");
+  //   event.target.dataset.dragover = "false";
+  // }
 }

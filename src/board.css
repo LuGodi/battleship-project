@@ -46,6 +46,9 @@
   max-width: 40px;
   height: 40px;
 }
+.board-container > div[data-dragover="true"] {
+  background-color: white;
+}
 /* counters setting and incrementing but forget about the very fist cell, it should be empty */
 .board-container > [data-row="0"]:not([data-column="0"]) {
   counter-increment: column;

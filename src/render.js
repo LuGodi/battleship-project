@@ -72,6 +72,9 @@ export class Render {
     });
     populateBtn.addEventListener("click", () => {
       Game.populateGameboard(Game.getCurrentPlayer());
+      shipsDiv
+        .querySelectorAll(".ship-parts-view")
+        .forEach((part) => part.remove());
       board.updateBoard();
     });
     doneBtn.addEventListener("click", setupDone);
@@ -240,6 +243,7 @@ export class renderUtil {
         DragAndDrop.dragstartEvent(name, length)
       );
       shipViewEl.addEventListener("dragend", DragAndDrop.dragendHandler);
+
       const shipInfoEl = this.makeElement(
         "div",
         "ship-info",
