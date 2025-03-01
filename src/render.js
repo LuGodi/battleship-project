@@ -21,6 +21,8 @@ export class Render {
     console.log("game start screen");
     const onePlayerBtn = document.createElement("button");
     const twoPlayersBtn = document.createElement("button");
+    onePlayerBtn.classList.add("one-player-button");
+    twoPlayersBtn.classList.add("two-player-button");
     onePlayerBtn.textContent = "One player Mode";
     twoPlayersBtn.textContent = "Two players Mode";
     //TODO: No need to repeat, clean this up later
@@ -111,7 +113,6 @@ export class Render {
     } to ${Game.getCurrentPlayer().name}`;
 
     Render.cachedDom.mainContainer.replaceChildren(switching);
-
     await Render.nextScreen(nextScreenFun, time);
 
     //set a timer to change the screen and board to the other player
@@ -125,11 +126,11 @@ export class Render {
       this.cachedDom.logger = logger;
       this.cachedDom.body.append(logger.getLogger());
     }
-
-    document.documentElement.style.setProperty(
-      "--current-player",
-      Game.getCurrentPlayer().name
-    );
+    this.cachedDom.mainContainer.classList.add("player-move-phase");
+    // document.documentElement.style.setProperty(
+    //   "--current-player",
+    //   Game.getCurrentPlayer().name
+    // );
 
     // console.log(this.cachedDom.domBoards);
     // console.log("player Move Screen");
@@ -163,6 +164,7 @@ export class Render {
     this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static gameOverScreen() {
+    this.cachedDom.mainContainer.classList.remove("player-move-phase");
     const [player1Board, player2Board] = this.cachedDom.domBoards;
     player1Board.revealBoard();
     player2Board.revealBoard();

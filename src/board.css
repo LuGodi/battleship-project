@@ -32,7 +32,7 @@
 /* .board-container[data-player~="var(--current-player)"] {
   opacity: 0.3;
 } */
-.board-container[data-player-status="ally"] {
+.player-move-phase .board-container[data-player-status="ally"] {
   opacity: 0.3;
 }
 .board-container > div {

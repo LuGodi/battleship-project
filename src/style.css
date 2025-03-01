@@ -30,6 +30,7 @@
   --color--secondary: #1e2939;
   --color--text: #ebe6e7;
   --color--board-color: #4a5f96;
+  --button-icon-pixel-size: 120px;
   color: var(--color-text);
 }
 
@@ -63,8 +64,8 @@ body {
   display: flex;
   min-height: 100%;
   width: 100%;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
+  justify-content: space-evenly;
 }
 .main-container.game-start-phase button {
   border: 3px solid var(--color--text);
@@ -75,17 +76,75 @@ body {
   font-size: 1.3rem;
   margin: 30px;
   height: 20vh;
+  width: 20ch;
   font-family: "JetBrains Mono";
   font-weight: 100;
+  position: relative;
 }
-.main-container.player-setup-phase {
-  align-items: baseline;
+.main-container.game-start-phase button:hover {
+  background-color: var(--color--terciary);
+  transform: scale(1.1);
 }
+.main-container.game-start-phase {
+  align-items: center;
+}
+.one-player-button {
+  background-image: url(assets/ComputerIcon.png);
+}
+.two-player-button {
+  background-image: url(assets/VsIcon.png);
+}
+.main-container.game-start-phase button {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  background-size: var(--button-icon-pixel-size);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: bottom;
+  background-origin: border-box;
+}
+
+/* .one-player-button::before {
+  background-image: url(./assets/ComputerIcon.png);
+  content: "";
+  display: inline-block;
+  width: var(--button-icon-pixel-size);
+  height: var(--button-icon-pixel-size);
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.two-player-button::before {
+  background-image: url(./assets/VsIcon.png);
+  content: "";
+  display: inline-block;
+  width: var(--button-icon-pixel-size);
+  height: var(--button-icon-pixel-size);
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+} */
 .ship-placement-container {
   padding: 30px;
   display: flex;
   flex-direction: column;
   position: relative;
+}
+.ship-placement-container button {
+  /* border: 1px solid var(--color--text); */
+  border: none;
+  background-color: var(--color--terciary);
+  /* height: 3ch; */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: none;
+  color: var(--color--text);
+  margin: 10px;
+  font-size: 1rem;
+
+  font-family: "JetBrains Mono";
+  font-weight: 100;
 }
 .ship-placement-container::before {
   content: "Ships";
