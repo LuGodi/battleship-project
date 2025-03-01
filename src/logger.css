@@ -20,15 +20,7 @@ body:has(.log-container) {
   position: relative;
   overflow: auto;
 }
-/* .log-container::before {
-  content: "Logger";
-  font-size: 20px;
-  display: inline-block;
-  width: 50px;
-  position: absolute;
-  top: -20px;
-  color: white;
-} */
+
 .log-message {
   display: block;
   color: var(--color--text);
