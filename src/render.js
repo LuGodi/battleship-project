@@ -139,8 +139,10 @@ export class Render {
     // console.log("player Move Screen");
     // console.log(Game.getCurrentStage());
     if (Game.currentPlayer.type === "computer") {
+      console.log(Game.currentPlayer.type);
       const nextRenderPhase = Game.computerPlayerMove();
-      Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);
+      Render.nextScreen(Render[nextRenderPhase + "Screen"], 0);
+      // Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);
     }
     //DONE stop making new boards
     //DONE make board in the same position so theres no changing around each round

@@ -152,7 +152,7 @@ export class BoardRenderer {
       } else if (
         this.player.gameboard.coordinates.has(cell.dataset.coordinates)
       ) {
-        console.log("found");
+        // console.log("found");
         cell.replaceChildren(this.renderShip(cell.dataset.coordinates));
       } else {
         cell.replaceChildren();
@@ -175,10 +175,10 @@ export class BoardRenderer {
     }
   }
   handleEvent(event) {
-    console.log(this);
-    console.log(event.type);
-    console.log(event.target);
-    console.log(Game.getCurrentStage());
+    // console.log(this);
+    // console.log(event.type);
+    // console.log(event.target);
+    // console.log(Game.getCurrentStage());
     if (event.target.dataset.coordinates === undefined) return;
     //Refactor give the event to each handler properly
     console.log("here");
@@ -195,7 +195,11 @@ export class BoardRenderer {
       //Fixed by disabling pointer events and by placing listener on the enemy board ONLY and removing it later
       this.enemyView();
       setTimeout(() => {
-        Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+        if (Game.getCurrentPlayer().type === "computer") {
+          Render.nextScreen(Render[nextRenderPhase + "Screen"]);
+        } else {
+          Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);
+        }
       }, BoardRenderer.TIME_FOR_HIT_FEEDBACK);
     }
   }
@@ -225,8 +229,8 @@ export class BoardRenderer {
     //its already sorted
     // coordinatesByShips.forEach((val, key) => val.sort());
 
-    console.log("coordinatesbySHIPS");
-    console.log(coordinatesByShips);
+    // console.log("coordinatesbySHIPS");
+    // console.log(coordinatesByShips);
     return coordinatesByShips;
   }
   renderShip(cellCoordinate) {
@@ -234,10 +238,10 @@ export class BoardRenderer {
     const coordinates = this.player.gameboard.coordinates;
     //I should only loop through the cells that have a ship, or, cells that are in the coordinates array
 
-    console.log(cellCoordinate);
+    // console.log(cellCoordinate);
     if (coordinates.has(cellCoordinate)) {
       const shipInstance = coordinates.get(cellCoordinate);
-      console.log(shipInstance);
+      // console.log(shipInstance);
       //all the coordinates that ship occupies
       const shipCoordinatesArr = groupedCoord.get(shipInstance);
       //which part is this? Start, middle or end ?
@@ -248,7 +252,7 @@ export class BoardRenderer {
       );
       const partImg = new Image();
       partImg.src = part;
-      console.log(part);
+      // console.log(part);
       return partImg;
 
       //DONE change this to only receive the coordinates and decide which part is
