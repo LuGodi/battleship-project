@@ -309,9 +309,16 @@ body {
 /* .board-container[data-player~="var(--current-player)"] {
   opacity: 0.3;
 } */
+
 .player-move-phase .board-container[data-player-status="ally"] {
   opacity: 0.3;
   pointer-events: NONE;
+}
+.player-move-phase .board-container.highlight {
+  opacity: 1;
+}
+.player-move-phase .board-container.dim {
+  opacity: 0.3;
 }
 .board-container > div {
   /* border: 1px solid rgb(55, 0, 255); */
