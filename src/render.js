@@ -18,7 +18,6 @@ export class Render {
 
   static gameStartScreen() {
     //TODO memoize
-    console.log("game start screen");
     const onePlayerBtn = document.createElement("button");
     const twoPlayersBtn = document.createElement("button");
     onePlayerBtn.classList.add("one-player-button");
@@ -82,7 +81,6 @@ export class Render {
       //fixed
 
       const nextRenderPhase = Game.playerSetup();
-      console.log(nextRenderPhase);
       Render.cachedDom.domBoards.push(board);
       Render.cachedDom.mainContainer.classList.remove("player-setup-phase");
 
@@ -133,26 +131,15 @@ export class Render {
       this.cachedDom.body.append(logger.getLogger());
     }
     this.cachedDom.mainContainer.classList.add("player-move-phase");
-    // document.documentElement.style.setProperty(
-    //   "--current-player",
-    //   Game.getCurrentPlayer().name
-    // );
 
-    // console.log(this.cachedDom.domBoards);
-    // console.log("player Move Screen");
-    // console.log(Game.getCurrentStage());
     if (Game.currentPlayer.type === "computer") {
-      console.log(Game.currentPlayer.type);
       let playerBoard;
       let computerBoard;
       this.cachedDom.domBoards.forEach((board) => {
         if (board.player.type === "computer") computerBoard = board;
         else playerBoard = board;
       });
-      // const [playerBoard] = this.cachedDom.domBoards.filter(
-      //   (board) => board.player.type !== "computer"
-      // );
-      // console.log(computerBoard);
+
       playerBoard.highlightBoard(true);
       computerBoard.getRenderedBoard().classList.add("dim");
       const nextRenderPhase = Game.computerPlayerMove();
@@ -163,8 +150,6 @@ export class Render {
       }, BoardRenderer.TIME_FOR_HIT_FEEDBACK);
 
       return;
-
-      // Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);
     }
     //DONE stop making new boards
     //DONE make board in the same position so theres no changing around each round
@@ -252,7 +237,6 @@ export class renderUtil {
 
       // shipViewEl.addEventListener("dragend", (event) => {
       //   const data = event.dataTransfer.getData("text");
-      //   console.log(data);
       // });
       const shipName = this.makeElement("p", "ship-name");
       const shipLength = this.makeElement("p", "ship-length");
@@ -280,7 +264,6 @@ export class renderUtil {
             ? "vertical"
             : "horizontal";
 
-        console.log(event.currentTarget);
         event.currentTarget.lastElementChild.innerText =
           event.currentTarget.dataset.direction;
       });

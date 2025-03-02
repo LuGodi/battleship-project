@@ -14,7 +14,6 @@ describe("gameboard", () => {
     gameboard.placeShip("J", 9, 1);
     expect(gameboard.coordinates).not.toStrictEqual(newGameboard.coordinates);
     gameboard.clearGameboard();
-    console.log(gameboard.coordinates);
     expect(gameboard.coordinates).toStrictEqual(newGameboard.coordinates);
   });
   test("clearGameboard should clear missedShots", () => {
@@ -125,7 +124,6 @@ describe("gameboard", () => {
     });
     test("should spread ship based on its length through the cells", () => {
       gameboard.placeShip("A", 1, 2, "horizontal");
-      console.log;
       const shipInstance = Ship.mock.instances[0];
       //Vou ter que substituir por has se for usar set
       //posso tb por aqui o get

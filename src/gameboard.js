@@ -90,8 +90,6 @@ export default class Gameboard {
       ship.setDirection(direction);
       this.#spreadShip(column, row, ship, direction, length);
     } catch (e) {
-      // console.log(e);
-
       //TODO implement a decent error handler
       if (
         e.message === "Invalid coordinate" ||
@@ -135,7 +133,6 @@ export default class Gameboard {
   }
   allSunk() {
     if (this.coordinates.size < 1) {
-      console.log("there are no ships");
       return false;
     }
     return Array.from(this.coordinates.values()).every((ship) => {

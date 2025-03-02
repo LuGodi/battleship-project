@@ -34,7 +34,6 @@ export default class Game {
   }
   static start(mode = 1) {
     //populate the gameboard with predetermined coordinates
-    console.log("start game");
     this.currentStage = "start";
     if (mode === 1) {
       Game.players.push(
@@ -60,7 +59,6 @@ export default class Game {
 
   static playerSetup(coordArray) {
     //should I call the next phase here?
-    console.log("Setting up", Game.getCurrentPlayer());
     this.currentStage = "playerSetup";
     if (Game.allPlayersReady() === true) {
       this.currentStage = "playerMove";
@@ -105,9 +103,7 @@ export default class Game {
       hit,
       sunk
     );
-    console.log(
-      `${enemyPlayer.name} attack received at ${attackCoordinates}, did it hit ? : ${hit}`
-    );
+
     if (this.isGameover()) {
       this.currentStage = "gameOver";
 
@@ -165,7 +161,6 @@ export default class Game {
     const gameboard = enemy.gameboard;
     const ships = Array.from(new Set(gameboard.coordinates.values()));
     const shipsSunk = ships.filter((ship) => ship.isSunk() === true);
-    // console.log(shipsSunk);
     const status = {
       player: player,
       attacksReceived: gameboard.attacksReceived.length,
@@ -203,12 +198,8 @@ export default class Game {
     let oldCurrPlayer = this.currentPlayer;
     this.currentPlayer =
       this.currentPlayer === this.player1 ? this.player2 : this.player1;
-    console.log(
-      `switched from ${oldCurrPlayer.name} to ${this.currentPlayer.name}`
-    );
   }
   static populatePredetermined(player, coordArray) {
-    console.log("populating player", player.name);
     player.gameboard.clearGameboard();
     const predeterminedCoord = [
       ["A", 1, 5, "horizontal"],
@@ -258,7 +249,6 @@ export default class Game {
     const cellsOccupied = this.SHIPS_TYPES.reduce((sum, curr) => {
       return curr.length + sum;
     }, 0);
-    console.log(cellsOccupied);
     return (
       uniqueShipsInstances.size === this.MAX_SHIPS &&
       player.gameboard.coordinates.size === cellsOccupied

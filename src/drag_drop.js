@@ -12,8 +12,6 @@ export default class DragAndDrop {
       );
 
       // e.dataTransfer.setDragImage(e.target, 40, 40);
-      console.log("dragstart");
-      console.log(e.dataTransfer.dropEffect);
     };
   }
   static dragendHandler(e) {
@@ -21,26 +19,18 @@ export default class DragAndDrop {
       e.dataTransfer.dropEffect === "move" &&
       DragAndDrop.#dropStatus === "Success"
     ) {
-      // e.target.draggable = false;
       e.target.parentElement.remove();
       console.log("dragend success");
     } else {
       console.log("dragend failed");
     }
-    console.log("dragend");
-    console.log("drop effect " + e.dataTransfer.dropEffect);
   }
 
   static dropEventHandler(event) {
     //TODO can I put the remove event listener here ?
 
-    // if (event.target.dataset.coordinates === undefined) {
-    //   console.log("aborted");
-    //   return;
-    // }
     event.preventDefault();
-    console.log(this);
-    console.log(event.target);
+
     const [col, row] = [
       event.target.dataset.coordinates[0],
       event.target.dataset.coordinates.substring(1),
@@ -48,9 +38,7 @@ export default class DragAndDrop {
     const shipLen = Number.parseInt(event.dataTransfer.getData("shipLength"));
     const shipName = event.dataTransfer.getData("shipName");
     const shipDirection = event.dataTransfer.getData("shipDirection");
-    console.log(shipLen, shipName, shipDirection);
     //TOFIX: if ship was already placed, position should be updated instead of placing another copy
-    console.log(col, row, shipLen, shipDirection);
     //FIXED: WHEN PASSING A DIRECTION OTHER THAN HORIZONTAL A 1 GETS ADDED
     //TOFIX: When failing placing the ship, shouldnt interrupt the whole program anymore
     try {
@@ -85,11 +73,5 @@ export default class DragAndDrop {
     }
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
-    console.log(event.dataTransfer.dropEffect);
   }
-  // static dragLeaveEventHandler(event) {
-  //   event.preventDefault();
-  //   console.log("dragleave");
-  //   event.target.dataset.dragover = "false";
-  // }
 }
