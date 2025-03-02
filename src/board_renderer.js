@@ -69,14 +69,9 @@ export class BoardRenderer {
     }
 
     const boardContainer = renderUtil.makeElement("div", className, ...cells);
-
     boardContainer.dataset.player = this.player.name;
-    // boardContainer.addEventListener("click", this);
-    // const boundEvent = this.clickBoardEvent.bind(this);
-    // boardContainer.addEventListener("click", boundEvent);
-
     this.renderedBoard = boardContainer;
-    console.log(this.renderedBoard);
+
     // return boardContainer;
   }
   highlightBoard(bool) {
@@ -97,13 +92,12 @@ export class BoardRenderer {
     if (this.amIEnemy() === true) {
       //need to see my ships and enemy players hits
       //I am the current player
-      console.log(`${this.player.name} is enemy`);
+
       this.enemyView();
       return;
     } else {
       //if im the enemy player, the current player needs to see
       //my attacks received, missed hits
-      console.log(`${this.player.name} is active player`);
       this.allyView();
     }
   }
@@ -159,7 +153,6 @@ export class BoardRenderer {
       } else if (
         this.player.gameboard.coordinates.has(cell.dataset.coordinates)
       ) {
-        // console.log("found");
         cell.replaceChildren(this.renderShip(cell.dataset.coordinates));
       } else {
         cell.replaceChildren();
@@ -182,13 +175,8 @@ export class BoardRenderer {
     }
   }
   handleEvent(event) {
-    // console.log(this);
-    // console.log(event.type);
-    // console.log(event.target);
-    // console.log(Game.getCurrentStage());
     if (event.target.dataset.coordinates === undefined) return;
     //Refactor give the event to each handler properly
-    console.log("here");
     if (event.type === "drop") this.dropEventHandler(event);
     if (event.type === "dragover") this.dragoverEventHandler(event);
     if (event.type !== "click") return;
@@ -238,8 +226,6 @@ export class BoardRenderer {
     //its already sorted
     // coordinatesByShips.forEach((val, key) => val.sort());
 
-    // console.log("coordinatesbySHIPS");
-    // console.log(coordinatesByShips);
     return coordinatesByShips;
   }
   renderShip(cellCoordinate) {
@@ -247,10 +233,8 @@ export class BoardRenderer {
     const coordinates = this.player.gameboard.coordinates;
     //I should only loop through the cells that have a ship, or, cells that are in the coordinates array
 
-    // console.log(cellCoordinate);
     if (coordinates.has(cellCoordinate)) {
       const shipInstance = coordinates.get(cellCoordinate);
-      // console.log(shipInstance);
       //all the coordinates that ship occupies
       const shipCoordinatesArr = groupedCoord.get(shipInstance);
       //which part is this? Start, middle or end ?
@@ -261,7 +245,6 @@ export class BoardRenderer {
       );
       const partImg = new Image();
       partImg.src = part;
-      // console.log(part);
       return partImg;
 
       //DONE change this to only receive the coordinates and decide which part is
