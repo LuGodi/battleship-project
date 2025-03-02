@@ -22,6 +22,7 @@ Try to sink all enemy ships before they sink yours, whoever destroys all enemy s
 
 ## TODO
 
-- Let player see computer attacking instead of switching player screen
+[x] Let player see computer attacking instead of switching player screen
+
 - Improve img drag to match the first cell of the ship
 - Refactor parts of the code
