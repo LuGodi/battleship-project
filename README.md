@@ -1,8 +1,10 @@
 # Battleship
 
 The classic battleship game
+
 The game is composed of 4 boards. 2 for each player
 one board is your information on the enemy, the other is yours.
+
 Try to sink all enemy ships before they sink yours, whoever destroys all enemy ships first wins the game
 
 ## Features
