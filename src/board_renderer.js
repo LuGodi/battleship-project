@@ -19,7 +19,7 @@ export class BoardRenderer {
   renderedBoard;
   player;
   grouped = null;
-  static TIME_FOR_HIT_FEEDBACK = 2000;
+  static TIME_FOR_HIT_FEEDBACK = 1200;
   static shipParts = {
     verticalMiddle: shipMiddleVerticalImg,
     verticalStart: shipStartVerticalImg,
@@ -79,6 +79,10 @@ export class BoardRenderer {
     console.log(this.renderedBoard);
     // return boardContainer;
   }
+  highlightBoard(bool) {
+    if (bool === true) this.renderedBoard.classList.add("highlight");
+    else this.renderedBoard.classList.remove("highlight");
+  }
   getRenderedBoard() {
     return this.renderedBoard;
   }
@@ -109,6 +113,7 @@ export class BoardRenderer {
   //REFACTOR
   enemyView(gameboardInstance) {
     this.renderedBoard.dataset.playerStatus = "enemy";
+    this.highlightBoard(true);
     const missedHits = this.player.gameboard.missedShots;
     const attacksReceived = this.player.gameboard.attacksReceived;
 
@@ -128,7 +133,9 @@ export class BoardRenderer {
   }
   allyView(gameboardInstance) {
     //!!
+
     this.renderedBoard.dataset.playerStatus = "ally";
+    this.highlightBoard(false);
     //TODO can make the loop make three arrays and then we assign the content to those depending on type of array
 
     this.loopBoard((cell) => {
@@ -188,14 +195,16 @@ export class BoardRenderer {
     if (Game.getCurrentStage() === "playerMove" && this.amIEnemy() === true) {
       const attackCoordinates = this.clickBoardEvent(event);
       const nextRenderPhase = Game.playerMove(attackCoordinates);
+
       this.getRenderedBoard().removeEventListener("click", this);
       // this.updateBoard();
       //Because playerMove changed the active player, update board will detect the current board as an ally instead of enemy, so we override it to be enemyView
       //THIS ALSO INTRODUCES A BUG, IN WHICH IF YOU CLICK ON YOUR BOARD BEFORE THE TIME YOU CAN ATTACK IT
       //Fixed by disabling pointer events and by placing listener on the enemy board ONLY and removing it later
       this.enemyView();
+
       setTimeout(() => {
-        if (Game.getCurrentPlayer().type === "computer") {
+        if (this.player.type === "computer") {
           Render.nextScreen(Render[nextRenderPhase + "Screen"]);
         } else {
           Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"]);

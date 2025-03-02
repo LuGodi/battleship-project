@@ -100,6 +100,7 @@ export class Render {
   }
 
   //should I place update board here on the switching playerScreen  ?
+  //TODO this is wrong? Is there a need to return promise here?
   static async nextScreen(nextScreenFun, time = 0) {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -123,6 +124,8 @@ export class Render {
 
   //REFACTOR clean up this is messy
   static playerMoveScreen() {
+    this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
+
     //TODO next: Decide also if the two boards are going to be p1 board and p2 board or enemy and currentplayer board
     if (this.cachedDom.logger === null) {
       const logger = Game.logger;
@@ -140,8 +143,27 @@ export class Render {
     // console.log(Game.getCurrentStage());
     if (Game.currentPlayer.type === "computer") {
       console.log(Game.currentPlayer.type);
+      let playerBoard;
+      let computerBoard;
+      this.cachedDom.domBoards.forEach((board) => {
+        if (board.player.type === "computer") computerBoard = board;
+        else playerBoard = board;
+      });
+      // const [playerBoard] = this.cachedDom.domBoards.filter(
+      //   (board) => board.player.type !== "computer"
+      // );
+      // console.log(computerBoard);
+      playerBoard.highlightBoard(true);
+      computerBoard.getRenderedBoard().classList.add("dim");
       const nextRenderPhase = Game.computerPlayerMove();
-      Render.nextScreen(Render[nextRenderPhase + "Screen"], 0);
+      setTimeout(() => {
+        playerBoard.highlightBoard(false);
+        computerBoard.getRenderedBoard().classList.remove("dim");
+        Render[nextRenderPhase + "Screen"]();
+      }, BoardRenderer.TIME_FOR_HIT_FEEDBACK);
+
+      return;
+
       // Render.switchingPlayerScreen(Render[nextRenderPhase + "Screen"], 0);
     }
     //DONE stop making new boards
@@ -163,8 +185,6 @@ export class Render {
     );
     enemyBoard.getRenderedBoard().addEventListener("click", enemyBoard);
     //TODO implement gameover check
-
-    this.setHeader(`${Game.getCurrentPlayer().name}'s Turn`);
   }
   static gameOverScreen() {
     this.cachedDom.mainContainer.classList.remove("player-move-phase");

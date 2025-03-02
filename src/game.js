@@ -165,7 +165,7 @@ export default class Game {
     const gameboard = enemy.gameboard;
     const ships = Array.from(new Set(gameboard.coordinates.values()));
     const shipsSunk = ships.filter((ship) => ship.isSunk() === true);
-    console.log(shipsSunk);
+    // console.log(shipsSunk);
     const status = {
       player: player,
       attacksReceived: gameboard.attacksReceived.length,
