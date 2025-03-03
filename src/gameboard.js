@@ -96,8 +96,8 @@ export default class Gameboard {
         e.message === "Coordinate already taken"
       )
         //would be good if I could get which coordinates got this error
-        console.error(`Failed at ${JSON.stringify(e.cause)}, ${e.message}`);
-      this.coordinates = coordinatesBackup;
+        // console.error(`Failed at ${JSON.stringify(e.cause)}, ${e.message}`);
+        this.coordinates = coordinatesBackup;
       throw new Error(`${e.message} at ${e.cause.column}${e.cause.row}`);
     }
   }

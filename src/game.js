@@ -121,7 +121,7 @@ export default class Game {
         coordinates = Game.generateRandomCoordinate();
         return Game.playerMove(coordinates);
       } catch (error) {
-        console.error(`tried at ${coordinates}, regenerating`);
+        // console.error(`tried at ${coordinates}, regenerating`);
         if (error.message.includes("coordinate has already been hit") === false)
           throw error;
       }
@@ -234,9 +234,9 @@ export default class Game {
             error.message.includes("Coordinate already taken") ||
             error.message.includes("Invalid coordinate")
           ) {
-            console.error(
-              `tried to place at ${coordinates}, separated ${column},${row}, regenerating`
-            );
+            // console.error(
+            //   `tried to place at ${coordinates}, separated ${column},${row}, regenerating`
+            // );
           } else {
             throw error;
           }
