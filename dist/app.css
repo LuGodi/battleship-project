@@ -1,0 +1,374 @@
+body:has(.log-container) {
+  /* justify-content: center; */
+}
+.main-container + .log-container {
+  min-width: 1000px;
+  margin-bottom: 10px;
+}
+.log-container {
+  /* border-top: 1px solid var(--color--text); */
+  border-radius: 50px;
+  box-shadow: 0px -14px 0px 5px #1c293d, 0px -17px 1px 3px #101826;
+  grid-area: logger;
+  align-self: start;
+  justify-self: start;
+  padding: 20px;
+  padding-top: 10px;
+  width: 100%;
+  height: 10ch;
+  padding-top: none;
+  position: relative;
+  overflow: auto;
+}
+
+.log-message {
+  display: block;
+  color: var(--color--text);
+  font-weight: 100;
+}
+.log-message.log-status {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.log-message[data-player-name="Player"],
+.log-message[data-player-name="Player 1"] {
+  color: var(--color--board-color);
+  font-weight: 300;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url(1d9e47ce7f6576ce7bae.woff2);
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url(659df8a75626797e673b.woff2);
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url(db311a06095e69d7ec53.woff2);
+  font-weight: 800;
+  font-style: bold;
+}
+:root {
+  font-family: "JetBrains Mono", monospace;
+  --ship-view-tile: 20px;
+  --max-ship-size: 0;
+  --color--terciary: #111826;
+  --color--primary: #1d293d;
+  --color--secondary: #1e2939;
+  --color--text: #ebe6e7;
+  --color--board-color: #4a5f96;
+  --button-icon-pixel-size: 120px;
+  color: var(--color-text);
+}
+
+body {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    ". main . "
+    ". logger .";
+  grid-template-rows: 1fr 5fr;
+  min-height: 100vh;
+  width: 100vw;
+  gap: 20px;
+  place-items: center;
+  background-color: var(--color--primary);
+}
+.header {
+  grid-area: header;
+  color: var(--color--text);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color--text);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  background-color: var(--color--terciary);
+  font-size: 1.8rem;
+}
+.main-container {
+  grid-area: main;
+  display: flex;
+  min-height: 100%;
+  width: 100%;
+  align-items: start;
+  justify-content: space-evenly;
+}
+.main-container.game-start-phase button {
+  border: 3px solid var(--color--text);
+  border-radius: 20px;
+  background-color: var(--color--secondary);
+  color: var(--color--text);
+  padding: 20px;
+  font-size: 1.3rem;
+  margin: 30px;
+  height: 20vh;
+  width: 20ch;
+  font-family: "JetBrains Mono";
+  font-weight: 100;
+  position: relative;
+}
+.main-container.game-start-phase button:hover {
+  background-color: var(--color--terciary);
+  transform: scale(1.1);
+}
+.main-container.game-start-phase {
+  align-items: center;
+}
+.one-player-button {
+  background-image: url(b82e28801efb2412347a.png);
+}
+.two-player-button {
+  background-image: url(4f326bbc36403f256db5.png);
+}
+.main-container.game-start-phase button {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  background-size: var(--button-icon-pixel-size);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: bottom;
+  background-origin: border-box;
+}
+
+/* .one-player-button::before {
+  background-image: url(./assets/ComputerIcon.png);
+  content: "";
+  display: inline-block;
+  width: var(--button-icon-pixel-size);
+  height: var(--button-icon-pixel-size);
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.two-player-button::before {
+  background-image: url(./assets/VsIcon.png);
+  content: "";
+  display: inline-block;
+  width: var(--button-icon-pixel-size);
+  height: var(--button-icon-pixel-size);
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+} */
+.ship-placement-container {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.ship-placement-container button {
+  /* border: 1px solid var(--color--text); */
+  border: none;
+  background-color: var(--color--terciary);
+  /* height: 3ch; */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: none;
+  color: var(--color--text);
+  margin: 10px;
+  font-size: 1rem;
+
+  font-family: "JetBrains Mono";
+  font-weight: 100;
+}
+.ship-placement-container::before {
+  content: "Ships";
+  display: inline-block;
+  position: absolute;
+  font-size: 30px;
+  top: -10px;
+  margin-left: 20px;
+}
+
+.ships-menu {
+  display: flex;
+
+  flex-direction: column;
+  row-gap: 5px;
+}
+.ships-menu > * {
+  min-width: 40%;
+}
+.ship-view {
+  width: 50px;
+  height: auto;
+  display: block;
+  background-color: lightgreen;
+}
+.ship-parts-view img {
+  height: var(--ship-view-tile);
+  width: var(--ship-view-tile);
+  pointer-events: none;
+}
+.ship-parts-view:has(+ .ship-info[data-direction="vertical"]) {
+  /* rotate: 90deg; */
+  flex-direction: column;
+}
+.ship-parts-view:has(+ .ship-info[data-direction="vertical"]) img {
+  rotate: 90deg;
+}
+.ship-parts-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--max-ship-size) * var(--ship-view-tile));
+  height: calc(var(--max-ship-size) * var(--ship-view-tile));
+  border-right: 1px solid var(--color--terciary);
+}
+.ship-parts-view[draggable="false"] {
+  visibility: hidden;
+  /* display: none; */
+}
+.ship-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.ship-info {
+  padding: 5px;
+  position: relative;
+}
+.ship-parts-view:hover {
+  border: none;
+}
+.ship-info .ship-name::before {
+  content: "Name: ";
+  display: inline-block;
+  width: 50px;
+  margin-right: 10px;
+}
+.ship-info .ship-length::before {
+  content: "Size: ";
+  display: inline-block;
+  width: 50px;
+  margin-right: 10px;
+}
+.ship-info .ship-direction {
+  cursor: pointer;
+}
+.ship-direction::before {
+  background-image: url(8e41839aeef57efc0377.svg);
+  content: "";
+  display: inline-block;
+  width: fit-content;
+  height: auto;
+  position: absolute;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translate(500%, 0) rotateZ(11deg);
+}
+
+:root {
+  --rows: 10;
+  --columns: 10;
+  --tile-height: 40px;
+  --tile-width: 40px;
+  --label-counter-size: 2ch;
+  --water-color: #263e7c;
+  --current-player: "none";
+}
+
+.board-containers {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+.board-header-info {
+  display: block;
+  text-align: center;
+}
+.board-container {
+  height: 500px;
+  width: 500px;
+  display: grid;
+  grid-template-columns: repeat(11, var(--tile-width));
+  grid-template-rows: repeat(11, var(--tile-height));
+  gap: 5px;
+  padding: 5px;
+  align-self: baseline;
+}
+
+/* TODO didnt work, i would like to look it up later */
+/* .board-container[data-player~="var(--current-player)"] {
+  opacity: 0.3;
+} */
+
+.player-move-phase .board-container[data-player-status="ally"] {
+  opacity: 0.3;
+  pointer-events: NONE;
+}
+.player-move-phase .board-container.highlight {
+  opacity: 1;
+}
+.player-move-phase .board-container.dim {
+  opacity: 0.3;
+}
+.board-container > div {
+  /* border: 1px solid rgb(55, 0, 255); */
+  background-color: var(--water-color);
+  align-content: center;
+  text-align: center;
+}
+.board-container > div > img {
+  max-width: 40px;
+  height: 40px;
+}
+.board-container > div[data-dragover="true"] {
+  background-color: white;
+}
+/* counters setting and incrementing but forget about the very fist cell, it should be empty */
+.board-container > [data-row="0"]:not([data-column="0"]) {
+  counter-increment: column;
+  background-color: transparent;
+}
+.board-container > [data-column="0"]:not([data-row="0"]) {
+  counter-increment: row;
+  background-color: transparent;
+}
+/* selecting the header row to define columns labels */
+/* 0 0 is the empty cell, so we cant count row 0 */
+/* row counters */
+.board-container > [data-column="0"]:not([data-row="0"])::before {
+  content: counter(row);
+  display: block;
+  text-align: end;
+  margin-right: 3px;
+  font-size: var(--label-counter-size);
+  background-color: transparent;
+  /* height: 100%; */
+  /* grid-column: attr(data-column);
+  grid-row: attr(data-column); */
+}
+/* column counters */
+.board-container > [data-row="0"]:not([data-column="0"])::before {
+  content: counter(column, upper-alpha);
+  display: block;
+  /* height: 100%; */
+  text-align: center;
+  background-color: transparent;
+  font-size: var(--label-counter-size);
+}
+
+.board-container > [data-row="0"][data-column="0"] {
+  background-color: transparent;
+}
+
+
+/*# sourceMappingURL=app.css.map*/
